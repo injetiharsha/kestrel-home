@@ -1,0 +1,607 @@
+{
+  "model": "LogisticRegression",
+  "threshold": 0.34,
+  "validation": {
+    "fold_used_for_threshold": "Fold1 (window A: train to 2025-09-30)",
+    "reported_on": "Fold2 and Fold3 (later windows)"
+  },
+  "per_fold_metrics": {
+    "Fold1": {
+      "metrics": {
+        "n": 2054,
+        "base_rate": 0.10954235637779941,
+        "auc": 0.7619464188080919,
+        "pr_auc": 0.3337088709503393,
+        "accuracy": 0.6699123661148978,
+        "always_no_accuracy": 0.8904576436222006,
+        "threshold": 0.34,
+        "precision": 0.21437578814627994,
+        "recall": 0.7555555555555555,
+        "n_flagged": 793,
+        "n_returns": 225,
+        "auc_ci": [
+          0.728458643318913,
+          0.7920427512740434
+        ],
+        "pr_auc_ci": [
+          0.2740937795007143,
+          0.3949347534059962
+        ]
+      },
+      "economics_call": {
+        "strategy": "call",
+        "threshold": 0.34,
+        "n_flagged": 793,
+        "pct_flagged": 38.607594936708864,
+        "net_per_window": 32739.999999999985,
+        "net_per_flagged_order": 41.28625472887766,
+        "monthly_net_700": 11157.740993184027,
+        "returns_prevented": 59.49999999999999,
+        "call_cost_total": 35685.0,
+        "saving_total": 68424.99999999999
+      },
+      "calibration": [
+        {
+          "bin": "0.00-0.10",
+          "n": 348,
+          "mean_predicted": 0.060618809372790974,
+          "mean_actual": 0.014367816091954023
+        },
+        {
+          "bin": "0.10-0.20",
+          "n": 462,
+          "mean_predicted": 0.14640781885284324,
+          "mean_actual": 0.05627705627705628
+        },
+        {
+          "bin": "0.20-0.30",
+          "n": 340,
+          "mean_predicted": 0.24855697168198443,
+          "mean_actual": 0.05
+        },
+        {
+          "bin": "0.30-0.40",
+          "n": 275,
+          "mean_predicted": 0.3489606218611921,
+          "mean_actual": 0.09818181818181818
+        },
+        {
+          "bin": "0.40-0.50",
+          "n": 199,
+          "mean_predicted": 0.4493372264514078,
+          "mean_actual": 0.18090452261306533
+        },
+        {
+          "bin": "0.50-0.60",
+          "n": 153,
+          "mean_predicted": 0.5422869471176284,
+          "mean_actual": 0.1568627450980392
+        },
+        {
+          "bin": "0.60-0.70",
+          "n": 123,
+          "mean_predicted": 0.6490314304719667,
+          "mean_actual": 0.23577235772357724
+        },
+        {
+          "bin": "0.70-0.80",
+          "n": 77,
+          "mean_predicted": 0.745847474797246,
+          "mean_actual": 0.2727272727272727
+        },
+        {
+          "bin": "0.80-0.90",
+          "n": 47,
+          "mean_predicted": 0.8488220076675682,
+          "mean_actual": 0.48936170212765956
+        },
+        {
+          "bin": "0.90-1.00",
+          "n": 30,
+          "mean_predicted": 0.9563470259644495,
+          "mean_actual": 0.5666666666666667
+        }
+      ]
+    },
+    "Fold2": {
+      "metrics": {
+        "n": 2110,
+        "base_rate": 0.11611374407582939,
+        "auc": 0.7640312961645783,
+        "pr_auc": 0.38059672636047726,
+        "accuracy": 0.7720379146919432,
+        "always_no_accuracy": 0.8838862559241706,
+        "threshold": 0.53,
+        "precision": 0.2814814814814815,
+        "recall": 0.6204081632653061,
+        "n_flagged": 540,
+        "n_returns": 245,
+        "auc_ci": [
+          0.7296470349555971,
+          0.7957098402301491
+        ],
+        "pr_auc_ci": [
+          0.31832238078031877,
+          0.4450997842062623
+        ]
+      },
+      "economics_call": {
+        "strategy": "call",
+        "threshold": 0.53,
+        "n_flagged": 540,
+        "pct_flagged": 25.59241706161137,
+        "net_per_window": 36879.99999999999,
+        "net_per_flagged_order": 68.29629629629628,
+        "monthly_net_700": 12235.07109004739,
+        "returns_prevented": 53.199999999999996,
+        "call_cost_total": 24300.0,
+        "saving_total": 61179.99999999999
+      },
+      "calibration": [
+        {
+          "bin": "0.00-0.10",
+          "n": 233,
+          "mean_predicted": 0.06816370628125386,
+          "mean_actual": 0.02145922746781116
+        },
+        {
+          "bin": "0.10-0.20",
+          "n": 416,
+          "mean_predicted": 0.14945970941783296,
+          "mean_actual": 0.04807692307692308
+        },
+        {
+          "bin": "0.20-0.30",
+          "n": 347,
+          "mean_predicted": 0.24877266633526166,
+          "mean_actual": 0.06051873198847262
+        },
+        {
+          "bin": "0.30-0.40",
+          "n": 287,
+          "mean_predicted": 0.3513825973377981,
+          "mean_actual": 0.08362369337979095
+        },
+        {
+          "bin": "0.40-0.50",
+          "n": 240,
+          "mean_predicted": 0.447477396209261,
+          "mean_actual": 0.08333333333333333
+        },
+        {
+          "bin": "0.50-0.60",
+          "n": 207,
+          "mean_predicted": 0.5535435708227145,
+          "mean_actual": 0.13526570048309178
+        },
+        {
+          "bin": "0.60-0.70",
+          "n": 150,
+          "mean_predicted": 0.6475691147984228,
+          "mean_actual": 0.23333333333333334
+        },
+        {
+          "bin": "0.70-0.80",
+          "n": 109,
+          "mean_predicted": 0.7482914766232601,
+          "mean_actual": 0.30275229357798167
+        },
+        {
+          "bin": "0.80-0.90",
+          "n": 85,
+          "mean_predicted": 0.8427694544655273,
+          "mean_actual": 0.3764705882352941
+        },
+        {
+          "bin": "0.90-1.00",
+          "n": 36,
+          "mean_predicted": 0.9400102418906724,
+          "mean_actual": 0.75
+        }
+      ]
+    },
+    "Fold3": {
+      "metrics": {
+        "n": 2103,
+        "base_rate": 0.11459819305753685,
+        "auc": 0.7728494324132799,
+        "pr_auc": 0.39486025222827054,
+        "accuracy": 0.6990014265335235,
+        "always_no_accuracy": 0.8854018069424632,
+        "threshold": 0.45,
+        "precision": 0.23655913978494625,
+        "recall": 0.7302904564315352,
+        "n_flagged": 744,
+        "n_returns": 241,
+        "auc_ci": [
+          0.7385734953532044,
+          0.8025312394122945
+        ],
+        "pr_auc_ci": [
+          0.3368692036406567,
+          0.4552215654003975
+        ]
+      },
+      "economics_call": {
+        "strategy": "call",
+        "threshold": 0.45,
+        "n_flagged": 744,
+        "pct_flagged": 35.37803138373752,
+        "net_per_window": 37360.0,
+        "net_per_flagged_order": 50.215053763440864,
+        "monthly_net_700": 12435.568235853543,
+        "returns_prevented": 61.599999999999994,
+        "call_cost_total": 33480.0,
+        "saving_total": 70840.0
+      },
+      "calibration": [
+        {
+          "bin": "0.00-0.10",
+          "n": 169,
+          "mean_predicted": 0.07331600373014259,
+          "mean_actual": 0.005917159763313609
+        },
+        {
+          "bin": "0.10-0.20",
+          "n": 360,
+          "mean_predicted": 0.15085646819382412,
+          "mean_actual": 0.03333333333333333
+        },
+        {
+          "bin": "0.20-0.30",
+          "n": 404,
+          "mean_predicted": 0.2529572800407753,
+          "mean_actual": 0.05198019801980198
+        },
+        {
+          "bin": "0.30-0.40",
+          "n": 304,
+          "mean_predicted": 0.34806573803759844,
+          "mean_actual": 0.0756578947368421
+        },
+        {
+          "bin": "0.40-0.50",
+          "n": 253,
+          "mean_predicted": 0.4495713185865465,
+          "mean_actual": 0.11857707509881422
+        },
+        {
+          "bin": "0.50-0.60",
+          "n": 233,
+          "mean_predicted": 0.5480777342637826,
+          "mean_actual": 0.17167381974248927
+        },
+        {
+          "bin": "0.60-0.70",
+          "n": 128,
+          "mean_predicted": 0.645569598728692,
+          "mean_actual": 0.1640625
+        },
+        {
+          "bin": "0.70-0.80",
+          "n": 132,
+          "mean_predicted": 0.7493493991304915,
+          "mean_actual": 0.24242424242424243
+        },
+        {
+          "bin": "0.80-0.90",
+          "n": 81,
+          "mean_predicted": 0.845856832220345,
+          "mean_actual": 0.38271604938271603
+        },
+        {
+          "bin": "0.90-1.00",
+          "n": 39,
+          "mean_predicted": 0.9470351933037878,
+          "mean_actual": 0.7692307692307693
+        }
+      ]
+    }
+  },
+  "call_strategy": {
+    "strategy": "call",
+    "threshold": 0.34,
+    "n_flagged": 1042,
+    "pct_flagged": 49.548264384213034,
+    "net_per_window": 32402.499999999985,
+    "net_per_flagged_order": 31.096449136276377,
+    "monthly_net_700": 10785.425582501184,
+    "returns_prevented": 68.94999999999999,
+    "call_cost_total": 46890.0,
+    "saving_total": 79292.49999999999
+  },
+  "hold_strategy": {
+    "strategy": "hold",
+    "threshold": 0.34,
+    "margin_pct": 0.15,
+    "n_flagged": 1042,
+    "pct_flagged": 49.548264384213034,
+    "net_per_window": -131353.81338,
+    "monthly_net_700": -43722.144253922976,
+    "saving_total": 27186.0,
+    "margin_lost_total": 158539.81338
+  },
+  "do_nothing": {
+    "strategy": "do_nothing",
+    "n_returns": 241,
+    "total_return_cost": 277150.0,
+    "monthly_return_cost_700": 92251.54541131717
+  },
+  "hold_sensitivity_A1": {
+    "5pct": {
+      "monthly_net_700": -8541.332915834524,
+      "margin_lost_total": 52846.60446
+    },
+    "15pct": {
+      "monthly_net_700": -43722.144253922976,
+      "margin_lost_total": 158539.81338
+    },
+    "25pct": {
+      "monthly_net_700": -78902.95559201142,
+      "margin_lost_total": 264233.0223
+    }
+  },
+  "assumption_A1": {
+    "description": "Margin lost per cancelled held order = 15% of order value",
+    "value": 0.15,
+    "sensitivity_range": "5% to 25%",
+    "decision": "15% chosen as mid-range. Hold loses to call at all tested margins."
+  },
+  "constants": {
+    "call_cost_rs": 45,
+    "return_cost_rs": 1150,
+    "call_prevention_rate": 0.35,
+    "hold_cancel_rate": 0.12,
+    "monthly_orders": 700
+  },
+  "ablations": [
+    {
+      "ablation": "full_features",
+      "dropped": [],
+      "auc": 0.7728494324132799,
+      "pr_auc": 0.39486025222827054,
+      "n_test": 2103
+    },
+    {
+      "ablation": "without_customer_prior",
+      "dropped": [
+        "customer_prior_orders",
+        "customer_prior_returns",
+        "prior_return_rate"
+      ],
+      "auc": 0.7251627884173981,
+      "pr_auc": 0.28108960794211824,
+      "n_test": 2103
+    },
+    {
+      "ablation": "without_hour_weekday",
+      "dropped": [
+        "hour",
+        "weekday"
+      ],
+      "auc": 0.7730433077358482,
+      "pr_auc": 0.39376380447576614,
+      "n_test": 2103
+    },
+    {
+      "ablation": "without_delivery_note_template",
+      "dropped": [
+        "delivery_note_template"
+      ],
+      "auc": 0.7771859999732585,
+      "pr_auc": 0.3979076588882233,
+      "n_test": 2103
+    },
+    {
+      "ablation": "without_pincode_prefix",
+      "dropped": [
+        "pincode_prefix"
+      ],
+      "auc": 0.7765196928301786,
+      "pr_auc": 0.4000079757651106,
+      "n_test": 2103
+    },
+    {
+      "ablation": "without_last_21_days",
+      "dropped": [],
+      "auc": 0.7675182581767857,
+      "pr_auc": 0.40057263905431745,
+      "n_test": 1635
+    }
+  ],
+  "segments": {
+    "by_family": {
+      "Mixer Grinder": {
+        "n": 299,
+        "return_rate": 0.07692307692307693,
+        "false_neg_rate": 0.391304347826087,
+        "false_pos_rate": 0.14855072463768115
+      },
+      "Room Heater": {
+        "n": 314,
+        "return_rate": 0.1337579617834395,
+        "false_neg_rate": 0.21428571428571427,
+        "false_pos_rate": 0.3639705882352941
+      },
+      "Water Purifier": {
+        "n": 267,
+        "return_rate": 0.12734082397003746,
+        "false_neg_rate": 0.17647058823529413,
+        "false_pos_rate": 0.41630901287553645
+      },
+      "Robot Vacuum": {
+        "n": 330,
+        "return_rate": 0.17575757575757575,
+        "false_neg_rate": 0.1896551724137931,
+        "false_pos_rate": 0.5808823529411765
+      },
+      "Ceiling Fan": {
+        "n": 315,
+        "return_rate": 0.07301587301587302,
+        "false_neg_rate": 0.5652173913043478,
+        "false_pos_rate": 0.13356164383561644
+      },
+      "Induction Cooktop": {
+        "n": 279,
+        "return_rate": 0.1039426523297491,
+        "false_neg_rate": 0.3793103448275862,
+        "false_pos_rate": 0.168
+      },
+      "Air Fryer": {
+        "n": 299,
+        "return_rate": 0.10702341137123746,
+        "false_neg_rate": 0.1875,
+        "false_pos_rate": 0.3445692883895131
+      }
+    },
+    "by_payment_mode": {
+      "prepaid_card": {
+        "n": 437,
+        "return_rate": 0.08237986270022883,
+        "false_neg_rate": 0.4166666666666667
+      },
+      "prepaid_upi": {
+        "n": 756,
+        "return_rate": 0.06481481481481481,
+        "false_neg_rate": 0.4489795918367347
+      },
+      "emi": {
+        "n": 268,
+        "return_rate": 0.11194029850746269,
+        "false_neg_rate": 0.3333333333333333
+      },
+      "cod": {
+        "n": 642,
+        "return_rate": 0.19626168224299065,
+        "false_neg_rate": 0.14285714285714285
+      }
+    },
+    "by_shield": {
+      "shield_Y": {
+        "n": 473,
+        "return_rate": 0.20718816067653276,
+        "false_pos_rate": 0.528,
+        "n_flagged": 285
+      },
+      "shield_N": {
+        "n": 1630,
+        "return_rate": 0.08773006134969324,
+        "false_pos_rate": 0.2488231338264963,
+        "n_flagged": 459
+      }
+    }
+  },
+  "reported_fold_metrics": {
+    "Fold2": {
+      "metrics": {
+        "n": 2110,
+        "base_rate": 0.11611374407582939,
+        "auc": 0.7640312961645783,
+        "pr_auc": 0.38059672636047726,
+        "accuracy": 0.590047393364929,
+        "always_no_accuracy": 0.8838862559241706,
+        "threshold": 0.34,
+        "precision": 0.1918489065606362,
+        "recall": 0.7877551020408163,
+        "n_flagged": 1006,
+        "n_returns": 245,
+        "auc_ci": [
+          0.7296470349555971,
+          0.7957098402301491
+        ],
+        "pr_auc_ci": [
+          0.31832238078031877,
+          0.4450997842062623
+        ]
+      },
+      "economics_call": {
+        "strategy": "call",
+        "threshold": 0.34,
+        "n_flagged": 1006,
+        "pct_flagged": 47.67772511848341,
+        "net_per_window": 32412.5,
+        "net_per_flagged_order": 32.21918489065607,
+        "monthly_net_700": 10752.962085308056,
+        "returns_prevented": 67.55,
+        "call_cost_total": 45270.0,
+        "saving_total": 77682.5
+      }
+    },
+    "Fold3": {
+      "metrics": {
+        "n": 2103,
+        "base_rate": 0.11459819305753685,
+        "auc": 0.7728494324132799,
+        "pr_auc": 0.39486025222827054,
+        "accuracy": 0.5772705658582977,
+        "always_no_accuracy": 0.8854018069424632,
+        "threshold": 0.34,
+        "precision": 0.1890595009596929,
+        "recall": 0.8174273858921162,
+        "n_flagged": 1042,
+        "n_returns": 241,
+        "auc_ci": [
+          0.7385734953532044,
+          0.8025312394122945
+        ],
+        "pr_auc_ci": [
+          0.3368692036406567,
+          0.4552215654003975
+        ]
+      },
+      "economics_call": {
+        "strategy": "call",
+        "threshold": 0.34,
+        "n_flagged": 1042,
+        "pct_flagged": 49.548264384213034,
+        "net_per_window": 32402.499999999985,
+        "net_per_flagged_order": 31.096449136276377,
+        "monthly_net_700": 10785.425582501184,
+        "returns_prevented": 68.94999999999999,
+        "call_cost_total": 46890.0,
+        "saving_total": 79292.49999999999
+      }
+    }
+  },
+  "model_comparison": {
+    "DummyPrior": {
+      "auc": 0.5,
+      "auc_ci": [
+        0.5,
+        0.5
+      ],
+      "pr_auc": 0.11459819305753685,
+      "pr_auc_ci": [
+        0.10080836899667142,
+        0.1288754160722777
+      ],
+      "monthly_net_700": 788.0408939610081
+    },
+    "LogisticRegression": {
+      "auc": 0.7728494324132799,
+      "auc_ci": [
+        0.7385734953532044,
+        0.8025312394122945
+      ],
+      "pr_auc": 0.39486025222827054,
+      "pr_auc_ci": [
+        0.3368692036406567,
+        0.4552215654003975
+      ],
+      "monthly_net_700": 12435.568235853543
+    },
+    "HistGBT": {
+      "auc": 0.754585039956144,
+      "auc_ci": [
+        0.7196476517437569,
+        0.7875279461570456
+      ],
+      "pr_auc": 0.3633453293490883,
+      "pr_auc_ci": [
+        0.30647667289944425,
+        0.42875547622913507
+      ],
+      "monthly_net_700": 11282.21588207323
+    }
+  }
+}
