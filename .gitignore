@@ -1,0 +1,22 @@
+# Data (client data, never committed)
+data/
+
+# Environment
+.env
+.venv/
+
+# Scratch exploration
+.scratch/
+
+# Cache
+cache/
+
+# Large outputs
+outputs/*.parquet
+
+# Logs
+*.log
+
+# Python
+__pycache__/
+.pytest_cache/
