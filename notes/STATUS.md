@@ -10,6 +10,6 @@
 | P5 | Service + HTML + tests | [x] |
 | P6 | Evidence report | [x] |
 | P7 | Memo | [x] |
-| P8 | Submission form, handoff, cost, video | [ ] |
+| P8 | Submission form, handoff, cost, video | [x] |
 | P9 | Final validation | [ ] |
 
