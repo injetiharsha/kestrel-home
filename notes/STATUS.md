@@ -3,7 +3,7 @@
 | Phase | Description | Status |
 |-------|-------------|--------|
 | P0 | Skeleton, gitignore, AGENT_RULES, log.py, notes files | [x] |
-| P1 | Audit script reproducing section 3 numbers | [ ] |
+| P1 | Audit script reproducing section 3 numbers | [x] |
 | P2 | Cleaning + features + blacklist test | [ ] |
 | P3 | Baselines, models, backtests, rupee tables | [ ] |
 | P4 | Expected score + final predictions | [ ] |
