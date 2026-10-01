@@ -11,6 +11,7 @@ Status key: [ ] todo, [~] doing, [x] done, [!] trade-off / left out / could not 
 | # | When (IST) | Change | Why | Sections touched |
 |---|---|---|---|---|
 | 0 | plan v1 | Initial plan from full data audit | - | all |
+| 1 | 2026-10-01 19:03 | P5: Premium vanilla CSS/JS UI with system-ui typography, color-coded risk dashboard, no CDN | Requirement 3 UI polish & self-contained offline execution | 11 |
 
 ---
 

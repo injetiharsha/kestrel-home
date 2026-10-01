@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kestrel Home — Pre-Dispatch Return Risk Engine</title>
+  <style>
+    /* CSS Reset & System-UI Typography */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      --surface-bg: #ffffff;
+      --surface-card: #f8fafc;
+      --border-color: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-focus: rgba(37, 99, 235, 0.2);
+      
+      /* Risk Colors */
+      --risk-low: #10b981;
+      --risk-low-bg: #ecfdf5;
+      --risk-low-border: #a7f3d0;
+      --risk-medium: #f59e0b;
+      --risk-medium-bg: #fffbeb;
+      --risk-medium-border: #fde68a;
+      --risk-high: #ef4444;
+      --risk-high-bg: #fef2f2;
+      --risk-high-border: #fecaca;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2.5rem 1rem;
+      line-height: 1.5;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1080px;
+      background: var(--surface-bg);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%);
+      color: #ffffff;
+      padding: 2rem 2.5rem;
+      border-bottom: 1px solid #334155;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .brand-subtitle {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-top: 0.25rem;
+    }
+
+    /* Grid Layout */
+    .app-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      padding: 2.5rem;
+    }
+
+    @media (max-width: 860px) {
+      .app-body {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Section Title */
+    .section-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Presets row */
+    .presets-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-preset {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .btn-preset:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+
+    /* Form Fields */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: 0.01em;
+    }
+
+    input, select, textarea {
+      font-family: inherit;
+      font-size: 0.875rem;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background-color: #ffffff;
+      color: #1e293b;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      width: 100%;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-focus);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 55px;
+    }
+
+    /* Submit Button */
+    .btn-submit {
+      margin-top: 0.5rem;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem 1.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      font-family: inherit;
+    }
+
+    .btn-submit:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+
+    .btn-submit:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Results Card */
+    .results-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .result-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      transition: all 0.3s ease;
+    }
+
+    .empty-placeholder {
+      text-align: center;
+      padding: 3.5rem 1rem;
+      color: var(--text-muted);
+    }
+
+    .empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.6;
+    }
+
+    /* Risk Score Header */
+    .score-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      border: 1px solid;
+    }
+
+    .score-banner.risk-high {
+      background: var(--risk-high-bg);
+      border-color: var(--risk-high-border);
+      color: #991b1b;
+    }
+
+    .score-banner.risk-medium {
+      background: var(--risk-medium-bg);
+      border-color: var(--risk-medium-border);
+      color: #92400e;
+    }
+
+    .score-banner.risk-low {
+      background: var(--risk-low-bg);
+      border-color: var(--risk-low-border);
+      color: #065f46;
+    }
+
+    .score-number {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    .risk-badge {
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .risk-badge.risk-high { background: #ef4444; color: #ffffff; }
+    .risk-badge.risk-medium { background: #f59e0b; color: #ffffff; }
+    .risk-badge.risk-low { background: #10b981; color: #ffffff; }
+
+    /* Action Box */
+    .action-box {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.15rem;
+    }
+
+    .action-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .action-label {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    /* Reasons List */
+    .reasons-box {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.15rem;
+    }
+
+    .reasons-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .reasons-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .reasons-list li {
+      font-size: 0.85rem;
+      color: #334155;
+      position: relative;
+      padding-left: 1.25rem;
+      line-height: 1.4;
+    }
+
+    .reasons-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0.35rem;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    /* Error Message Box */
+    .error-box {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    /* Warnings Box */
+    .warnings-box {
+      background: #fffbeb;
+      border: 1px solid #fde68a;
+      color: #92400e;
+      padding: 0.75rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+    }
+
+    /* Footer */
+    footer {
+      background: #f8fafc;
+      border-top: 1px solid var(--border-color);
+      padding: 1rem 2.5rem;
+      font-size: 0.75rem;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="header-content">
+        <div>
+          <div class="brand-title">
+            <span>🦅</span> Kestrel Home Returns Risk Engine
+          </div>
+          <div class="brand-subtitle">
+            Operational Decision Support — Variant A: Pre-Dispatch Verification
+          </div>
+        </div>
+        <div>
+          <span class="badge-status">
+            <span class="pulse-dot"></span> Model Ready (v1.0.0)
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Body -->
+    <div class="app-body">
+      <!-- Order Form -->
+      <div>
+        <div class="section-title">
+          <span>Order Parameters</span>
+        </div>
+
+        <div class="presets-group">
+          <button type="button" class="btn-preset" onclick="applyPreset('high')">⚡ Preset: High Risk (COD Robot Vacuum)</button>
+          <button type="button" class="btn-preset" onclick="applyPreset('low')">✨ Preset: Low Risk (Prepaid Mixer Grinder)</button>
+        </div>
+
+        <form id="orderForm" onsubmit="handlePredict(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="order_id">Order ID</label>
+              <input type="text" id="order_id" name="order_id" value="KO26-SIM-001" required />
+            </div>
+            <div class="form-group">
+              <label for="sku">Product SKU</label>
+              <select id="sku" name="sku" required>
+                <!-- 21 SKUs -->
+                <option value="KH-RV-01">KH-RV-01 (Robot Vacuum Lite - Rs 17,599)</option>
+                <option value="KH-RV-02">KH-RV-02 (Robot Vacuum Pro - Rs 21,999)</option>
+                <option value="KH-RV-03">KH-RV-03 (Robot Vacuum Max - Rs 29,698)</option>
+                <option value="KH-RH-01">KH-RH-01 (Room Heater Lite - Rs 1,999)</option>
+                <option value="KH-RH-02">KH-RH-02 (Room Heater Pro - Rs 2,499)</option>
+                <option value="KH-RH-03">KH-RH-03 (Room Heater Max - Rs 3,373)</option>
+                <option value="KH-WP-01">KH-WP-01 (Water Purifier Lite - Rs 11,999)</option>
+                <option value="KH-WP-02">KH-WP-02 (Water Purifier Pro - Rs 14,999)</option>
+                <option value="KH-WP-03">KH-WP-03 (Water Purifier Max - Rs 20,248)</option>
+                <option value="KH-MG-01" selected>KH-MG-01 (Mixer Grinder Lite - Rs 3,199)</option>
+                <option value="KH-MG-02">KH-MG-02 (Mixer Grinder Pro - Rs 3,999)</option>
+                <option value="KH-MG-03">KH-MG-03 (Mixer Grinder Max - Rs 5,398)</option>
+                <option value="KH-AF-01">KH-AF-01 (Air Fryer Lite - Rs 5,199)</option>
+                <option value="KH-AF-02">KH-AF-02 (Air Fryer Pro - Rs 6,499)</option>
+                <option value="KH-AF-03">KH-AF-03 (Air Fryer Max - Rs 8,773)</option>
+                <option value="KH-CF-01">KH-CF-01 (Ceiling Fan Lite - Rs 2,799)</option>
+                <option value="KH-CF-02">KH-CF-02 (Ceiling Fan Pro - Rs 3,499)</option>
+                <option value="KH-CF-03">KH-CF-03 (Ceiling Fan Max - Rs 4,723)</option>
+                <option value="KH-IC-01">KH-IC-01 (Induction Cooktop Lite - Rs 2,399)</option>
+                <option value="KH-IC-02">KH-IC-02 (Induction Cooktop Pro - Rs 2,999)</option>
+                <option value="KH-IC-03">KH-IC-03 (Induction Cooktop Max - Rs 4,048)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="payment_mode">Payment Mode</label>
+              <select id="payment_mode" name="payment_mode">
+                <option value="prepaid_upi" selected>Prepaid UPI</option>
+                <option value="prepaid_card">Prepaid Card</option>
+                <option value="emi">EMI</option>
+                <option value="cod">Cash on Delivery (COD)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="sales_channel">Sales Channel</label>
+              <select id="sales_channel" name="sales_channel">
+                <option value="web" selected>Website</option>
+                <option value="app">Mobile App</option>
+                <option value="marketplace">Marketplace</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="discount_pct">Discount (%)</label>
+              <input type="number" id="discount_pct" name="discount_pct" min="0" max="80" value="5" required />
+            </div>
+            <div class="form-group">
+              <label for="qty">Quantity</label>
+              <input type="number" id="qty" name="qty" min="1" max="10" value="1" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="delivery_pincode">Delivery Pincode</label>
+              <input type="text" id="delivery_pincode" name="delivery_pincode" value="411001" required pattern="[0-9]{6}" />
+            </div>
+            <div class="form-group">
+              <label for="promised_delivery_days">Promised Days</label>
+              <input type="number" id="promised_delivery_days" name="promised_delivery_days" min="1" max="15" value="3" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="customer_prior_orders">Customer Prior Orders</label>
+              <input type="number" id="customer_prior_orders" name="customer_prior_orders" min="0" max="20" value="2" required />
+            </div>
+            <div class="form-group">
+              <label for="customer_prior_returns">Customer Prior Returns</label>
+              <input type="number" id="customer_prior_returns" name="customer_prior_returns" min="0" max="20" value="0" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="shield_member">Shield Member</label>
+              <select id="shield_member" name="shield_member">
+                <option value="N" selected>No (Standard)</option>
+                <option value="Y">Yes (Kestrel Shield Member)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="is_gift">Is Gift</label>
+              <select id="is_gift" name="is_gift">
+                <option value="N" selected>No</option>
+                <option value="Y">Yes</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="delivery_note">Delivery Note (Optional)</label>
+            <textarea id="delivery_note" name="delivery_note" placeholder="e.g. Call before delivery, Leave with security..."></textarea>
+          </div>
+
+          <button type="submit" id="btnSubmit" class="btn-submit">
+            <span class="spinner" id="btnSpinner"></span>
+            <span id="btnText">Evaluate Return Risk</span>
+          </button>
+        </form>
+
+        <div id="errorBox" class="error-box" style="margin-top: 1rem;"></div>
+      </div>
+
+      <!-- Results Panel -->
+      <div class="results-container">
+        <div class="section-title">
+          <span>Decision & Risk Intelligence</span>
+        </div>
+
+        <div id="emptyResult" class="result-card empty-placeholder">
+          <div class="empty-icon">📊</div>
+          <div style="font-weight: 600; margin-bottom: 0.25rem;">No Order Evaluated</div>
+          <div style="font-size: 0.85rem;">Submit an order or pick a preset to assess pre-dispatch risk.</div>
+        </div>
+
+        <div id="resultContent" class="result-card" style="display: none;">
+          <!-- Score Banner -->
+          <div id="scoreBanner" class="score-banner">
+            <div>
+              <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8;">Return Risk Score</div>
+              <div class="score-number" id="resScore">0.00%</div>
+            </div>
+            <div>
+              <span class="risk-badge" id="resBadge">LOW RISK</span>
+            </div>
+          </div>
+
+          <!-- Recommended Action -->
+          <div class="action-box">
+            <div class="action-title">Recommended Action</div>
+            <div class="action-label" id="resAction">Proceed to Standard Dispatch</div>
+          </div>
+
+          <!-- Top 3 Reasons -->
+          <div class="reasons-box">
+            <div class="reasons-title">Top 3 Risk Drivers (Explainability Engine)</div>
+            <ul class="reasons-list" id="resReasons"></ul>
+          </div>
+
+          <!-- Warnings if any -->
+          <div id="warningsBox" class="warnings-box" style="display: none;">
+            <strong>Notice:</strong> <span id="resWarnings"></span>
+          </div>
+
+          <div style="font-size: 0.75rem; color: #94a3b8; text-align: right;">
+            Model: <span id="resModelVersion">1.0.0-logistic-regression</span> | Threshold: 0.34
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div>Kestrel Home D2C Appliances — Return Risk Decision Service</div>
+      <div>Optimal Operating Rule: Confirm Call on Flagged Slice (Net +Rs 10,785/mo)</div>
+    </footer>
+  </div>
+
+  <script>
+    function applyPreset(type) {
+      if (type === 'high') {
+        document.getElementById('order_id').value = 'KO26-HIGH-RISK';
+        document.getElementById('sku').value = 'KH-RV-01'; // Robot vacuum
+        document.getElementById('payment_mode').value = 'cod';
+        document.getElementById('sales_channel').value = 'marketplace';
+        document.getElementById('discount_pct').value = '25';
+        document.getElementById('qty').value = '1';
+        document.getElementById('delivery_pincode').value = '411001';
+        document.getElementById('promised_delivery_days').value = '6';
+        document.getElementById('customer_prior_orders').value = '3';
+        document.getElementById('customer_prior_returns').value = '2';
+        document.getElementById('shield_member').value = 'Y';
+        document.getElementById('is_gift').value = 'N';
+        document.getElementById('delivery_note').value = 'Call on delivery';
+      } else if (type === 'low') {
+        document.getElementById('order_id').value = 'KO26-LOW-RISK';
+        document.getElementById('sku').value = 'KH-MG-01'; // Mixer grinder
+        document.getElementById('payment_mode').value = 'prepaid_upi';
+        document.getElementById('sales_channel').value = 'web';
+        document.getElementById('discount_pct').value = '5';
+        document.getElementById('qty').value = '1';
+        document.getElementById('delivery_pincode').value = '411001';
+        document.getElementById('promised_delivery_days').value = '2';
+        document.getElementById('customer_prior_orders').value = '4';
+        document.getElementById('customer_prior_returns').value = '0';
+        document.getElementById('shield_member').value = 'N';
+        document.getElementById('is_gift').value = 'N';
+        document.getElementById('delivery_note').value = '';
+      }
+    }
+
+    async function handlePredict(e) {
+      e.preventDefault();
+      
+      const errorBox = document.getElementById('errorBox');
+      errorBox.style.display = 'none';
+      errorBox.innerHTML = '';
+
+      const btn = document.getElementById('btnSubmit');
+      const spinner = document.getElementById('btnSpinner');
+      const btnText = document.getElementById('btnText');
+
+      btn.disabled = true;
+      spinner.style.display = 'inline-block';
+      btnText.innerText = 'Scoring Order...';
+
+      const payload = {
+        order_id: document.getElementById('order_id').value,
+        sku: document.getElementById('sku').value,
+        payment_mode: document.getElementById('payment_mode').value,
+        sales_channel: document.getElementById('sales_channel').value,
+        discount_pct: parseFloat(document.getElementById('discount_pct').value) || 0,
+        qty: parseInt(document.getElementById('qty').value, 10) || 1,
+        delivery_pincode: document.getElementById('delivery_pincode').value,
+        promised_delivery_days: parseInt(document.getElementById('promised_delivery_days').value, 10) || 3,
+        customer_prior_orders: parseInt(document.getElementById('customer_prior_orders').value, 10) || 0,
+        customer_prior_returns: parseInt(document.getElementById('customer_prior_returns').value, 10) || 0,
+        shield_member: document.getElementById('shield_member').value,
+        is_gift: document.getElementById('is_gift').value,
+        delivery_note: document.getElementById('delivery_note').value
+      };
+
+      try {
+        const response = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const errData = await response.json();
+          let msg = errData.message || 'Validation error';
+          if (errData.errors && errData.errors.length) {
+            msg += ':<br/>' + errData.errors.join('<br/>');
+          }
+          throw new Error(msg);
+        }
+
+        const data = await response.json();
+        renderResults(data);
+      } catch (err) {
+        errorBox.innerHTML = '<strong>Error:</strong> ' + err.message;
+        errorBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        spinner.style.display = 'none';
+        btnText.innerText = 'Evaluate Return Risk';
+      }
+    }
+
+    function renderResults(data) {
+      document.getElementById('emptyResult').style.display = 'none';
+      const resContent = document.getElementById('resultContent');
+      resContent.style.display = 'flex';
+
+      const banner = document.getElementById('scoreBanner');
+      const badge = document.getElementById('resBadge');
+      
+      banner.className = 'score-banner risk-' + data.risk_band;
+      badge.className = 'risk-badge risk-' + data.risk_band;
+      badge.innerText = data.risk_band + ' risk';
+
+      document.getElementById('resScore').innerText = (data.score * 100).toFixed(1) + '%';
+      document.getElementById('resAction').innerText = data.action_label;
+
+      const reasonsList = document.getElementById('resReasons');
+      reasonsList.innerHTML = '';
+      data.top_3_reasons.forEach(r => {
+        const li = document.createElement('li');
+        li.innerText = r;
+        reasonsList.appendChild(li);
+      });
+
+      const warnBox = document.getElementById('warningsBox');
+      if (data.warnings && data.warnings.length > 0) {
+        warnBox.style.display = 'block';
+        document.getElementById('resWarnings').innerText = data.warnings.join(' | ');
+      } else {
+        warnBox.style.display = 'none';
+      }
+
+      document.getElementById('resModelVersion').innerText = data.model_version;
+    }
+  </script>
+</body>
+</html>
