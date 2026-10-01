@@ -9,7 +9,7 @@
 | P4 | Expected score + final predictions | [x] |
 | P5 | Service + HTML + tests | [x] |
 | P6 | Evidence report | [x] |
-| P7 | Memo | [ ] |
+| P7 | Memo | [x] |
 | P8 | Submission form, handoff, cost, video | [ ] |
 | P9 | Final validation | [ ] |
 
