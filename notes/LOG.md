@@ -12,3 +12,5 @@
 - [AI] 2026-10-01 18:58:14 — Antigravity Gemini 3.7 Flash, P4 expected score lock-in/final fit/predictions, helped
 - [NOTE] 2026-10-01 19:04:50 — Completed Phase P5 service API with highly polished frontend
 - [AI] 2026-10-01 19:04:53 — Antigravity Gemini 3.7 Flash, P5 FastAPI service/perturbation reasons/polished vanilla UI/tests, helped
+- [NOTE] 2026-10-01 19:09:59 — Completed Phase P6 evidence report
+- [AI] 2026-10-01 19:10:03 — Antigravity Gemini 3.7 Flash, P6 evidence report finalization/failure analysis/calibration, helped

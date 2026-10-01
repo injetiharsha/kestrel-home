@@ -8,7 +8,7 @@
 | P3 | Baselines, models, backtests, rupee tables | [x] |
 | P4 | Expected score + final predictions | [x] |
 | P5 | Service + HTML + tests | [x] |
-| P6 | Evidence report | [ ] |
+| P6 | Evidence report | [x] |
 | P7 | Memo | [ ] |
 | P8 | Submission form, handoff, cost, video | [ ] |
 | P9 | Final validation | [ ] |
