@@ -1,0 +1,263 @@
+{
+  "products": [
+    {
+      "sku": "KH-AF-01",
+      "family": "Air Fryer",
+      "list_price_inr": 5199.0,
+      "warranty_months": 12,
+      "launch_date": "2023-11-04"
+    },
+    {
+      "sku": "KH-AF-02",
+      "family": "Air Fryer",
+      "list_price_inr": 6499.0,
+      "warranty_months": 12,
+      "launch_date": "2023-09-07"
+    },
+    {
+      "sku": "KH-AF-03",
+      "family": "Air Fryer",
+      "list_price_inr": 8773.0,
+      "warranty_months": 12,
+      "launch_date": "2024-02-02"
+    },
+    {
+      "sku": "KH-MG-01",
+      "family": "Mixer Grinder",
+      "list_price_inr": 3199.0,
+      "warranty_months": 24,
+      "launch_date": "2023-05-27"
+    },
+    {
+      "sku": "KH-MG-02",
+      "family": "Mixer Grinder",
+      "list_price_inr": 3999.0,
+      "warranty_months": 24,
+      "launch_date": "2023-09-20"
+    },
+    {
+      "sku": "KH-MG-03",
+      "family": "Mixer Grinder",
+      "list_price_inr": 5398.0,
+      "warranty_months": 24,
+      "launch_date": "2024-12-09"
+    },
+    {
+      "sku": "KH-WP-01",
+      "family": "Water Purifier",
+      "list_price_inr": 11999.0,
+      "warranty_months": 12,
+      "launch_date": "2024-09-03"
+    },
+    {
+      "sku": "KH-WP-02",
+      "family": "Water Purifier",
+      "list_price_inr": 14999.0,
+      "warranty_months": 12,
+      "launch_date": "2023-11-19"
+    },
+    {
+      "sku": "KH-WP-03",
+      "family": "Water Purifier",
+      "list_price_inr": 20248.0,
+      "warranty_months": 12,
+      "launch_date": "2023-10-16"
+    },
+    {
+      "sku": "KH-RV-01",
+      "family": "Robot Vacuum",
+      "list_price_inr": 17599.0,
+      "warranty_months": 12,
+      "launch_date": "2024-03-06"
+    },
+    {
+      "sku": "KH-RV-02",
+      "family": "Robot Vacuum",
+      "list_price_inr": 21999.0,
+      "warranty_months": 12,
+      "launch_date": "2024-01-27"
+    },
+    {
+      "sku": "KH-RV-03",
+      "family": "Robot Vacuum",
+      "list_price_inr": 29698.0,
+      "warranty_months": 12,
+      "launch_date": "2023-10-26"
+    },
+    {
+      "sku": "KH-IC-01",
+      "family": "Induction Cooktop",
+      "list_price_inr": 2399.0,
+      "warranty_months": 12,
+      "launch_date": "2024-05-16"
+    },
+    {
+      "sku": "KH-IC-02",
+      "family": "Induction Cooktop",
+      "list_price_inr": 2999.0,
+      "warranty_months": 12,
+      "launch_date": "2023-11-09"
+    },
+    {
+      "sku": "KH-IC-03",
+      "family": "Induction Cooktop",
+      "list_price_inr": 4048.0,
+      "warranty_months": 12,
+      "launch_date": "2025-01-28"
+    },
+    {
+      "sku": "KH-CF-01",
+      "family": "Ceiling Fan",
+      "list_price_inr": 2799.0,
+      "warranty_months": 24,
+      "launch_date": "2024-09-27"
+    },
+    {
+      "sku": "KH-CF-02",
+      "family": "Ceiling Fan",
+      "list_price_inr": 3499.0,
+      "warranty_months": 24,
+      "launch_date": "2023-10-15"
+    },
+    {
+      "sku": "KH-CF-03",
+      "family": "Ceiling Fan",
+      "list_price_inr": 4723.0,
+      "warranty_months": 24,
+      "launch_date": "2024-10-12"
+    },
+    {
+      "sku": "KH-RH-01",
+      "family": "Room Heater",
+      "list_price_inr": 1999.0,
+      "warranty_months": 12,
+      "launch_date": "2023-07-29"
+    },
+    {
+      "sku": "KH-RH-02",
+      "family": "Room Heater",
+      "list_price_inr": 2499.0,
+      "warranty_months": 12,
+      "launch_date": "2024-02-21"
+    },
+    {
+      "sku": "KH-RH-03",
+      "family": "Room Heater",
+      "list_price_inr": 3373.0,
+      "warranty_months": 12,
+      "launch_date": "2024-12-23"
+    }
+  ],
+  "states": [
+    "DL",
+    "KA",
+    "MH",
+    "MP",
+    "RJ",
+    "TN",
+    "TS",
+    "UP"
+  ],
+  "categories": {
+    "sales_channel": [
+      "app",
+      "marketplace",
+      "partner_outlet",
+      "web"
+    ],
+    "payment_mode": [
+      "cod",
+      "emi",
+      "prepaid_card",
+      "prepaid_upi"
+    ],
+    "is_gift": [
+      "N",
+      "Y"
+    ],
+    "family": [
+      "Air Fryer",
+      "Ceiling Fan",
+      "Induction Cooktop",
+      "Mixer Grinder",
+      "Robot Vacuum",
+      "Room Heater",
+      "Water Purifier"
+    ],
+    "sku": [
+      "KH-AF-01",
+      "KH-AF-02",
+      "KH-AF-03",
+      "KH-CF-01",
+      "KH-CF-02",
+      "KH-CF-03",
+      "KH-IC-01",
+      "KH-IC-02",
+      "KH-IC-03",
+      "KH-MG-01",
+      "KH-MG-02",
+      "KH-MG-03",
+      "KH-RH-01",
+      "KH-RH-02",
+      "KH-RH-03",
+      "KH-RV-01",
+      "KH-RV-02",
+      "KH-RV-03",
+      "KH-WP-01",
+      "KH-WP-02",
+      "KH-WP-03"
+    ],
+    "shield_member": [
+      "N",
+      "Y"
+    ],
+    "state": [
+      "DL",
+      "KA",
+      "MH",
+      "MP",
+      "RJ",
+      "TN",
+      "TS",
+      "UP"
+    ],
+    "pincode_prefix": [
+      "000",
+      "110",
+      "400",
+      "411",
+      "440",
+      "500",
+      "560",
+      "600"
+    ],
+    "delivery_note_template": [
+      "Call before delivery",
+      "Customer requested morning slot",
+      "Deliver after  pm",
+      "Deliver to neighbour flat A if not home",
+      "Deliver to neighbour flat B if not home",
+      "Deliver to neighbour flat C if not home",
+      "Deliver to neighbour flat D if not home",
+      "Do not call, WhatsApp only",
+      "Fragile - handle with care",
+      "Gate code , call before delivery",
+      "Landmark: opposite Axis Bank ATM",
+      "Landmark: opposite Big Bazaar",
+      "Landmark: opposite HP petrol pump",
+      "Landmark: opposite Metro pillar",
+      "Landmark: opposite Reliance Fresh",
+      "Landmark: opposite St",
+      "Leave with security",
+      "NONE",
+      "Office address, weekdays only",
+      "Ring twice",
+      "Third floor, no lift"
+    ]
+  },
+  "installable_families": [
+    "Ceiling Fan",
+    "Robot Vacuum",
+    "Water Purifier"
+  ]
+}

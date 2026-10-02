@@ -12,6 +12,7 @@ Status key: [ ] todo, [~] doing, [x] done, [!] trade-off / left out / could not 
 |---|---|---|---|---|
 | 0 | plan v1 | Initial plan from full data audit | - | all |
 | 1 | 2026-10-01 19:03 | P5: Premium vanilla CSS/JS UI with system-ui typography, color-coded risk dashboard, no CDN | Requirement 3 UI polish & self-contained offline execution | 11 |
+| 2 | 2026-10-02 15:15 | P5 revision: (a) service no longer reads data/ at runtime; product catalog and state list shipped as service/catalog.json; (b) UI rebuilt; (c) tests that need data skip cleanly; (d) test-client dependency added to requirements | Clean-machine reproducibility & UI quality | 11, 14, 16 |
 
 ---
 
@@ -209,9 +210,12 @@ returned, last_service_event_type, pickup_scheduled_at, source, order_id, custom
 ## 11. Service spec
 
 - Endpoint: `POST /predict` takes one order as JSON (fields = test columns, pre-dispatch only). Returns: score (0 to 1), risk band (low/medium/high vs chosen threshold), recommended action (none / confirm call), top 3 reasons in plain sentences, model version, warnings (e.g. unknown SKU, missing field).
-- Also: `GET /health`, `GET /` serves the HTML screen.
-- Screen: form with the order fields (dropdowns), button, shows score, action, reasons. No external calls, no CDN.
-- Starts from README on a clean machine: create venv, pip install -r requirements.txt, run uvicorn. No key needed. Polite 422 errors on bad input.
+- Also: `GET /health`, `GET /catalog` (returns catalog.json contents for UI dropdowns), `GET /` serves the HTML screen.
+- Product catalog and valid state list shipped as `service/catalog.json` (built by `scripts/build_catalog.py` from `data/products.csv` and model encoder states). Service reads catalog.json only; no runtime dependency on `data/`.
+- `state` field in request: delivery state code (e.g. MH, KA, DL). Valid states listed in catalog.json, extracted from the fitted model's OneHotEncoder categories.
+- Screen: form with the order fields (dropdowns populated from /catalog), button, shows score, action, reasons. No external calls, no CDN.
+- Starts from README on a clean machine: create venv, pip install -r requirements.txt, run uvicorn. No key needed. Polite 422 errors on bad input. Unknown SKU returns 422 (not silent fallback).
+- Content-Security-Policy header via middleware: `default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:`.
 - Reasons are templated from perturbation (section 7). Must not use any removed column.
 
 ---
@@ -245,6 +249,7 @@ What tried (baselines, models, leakage hunt) / what changed (dropped service+pic
 | K13 | Real scoring metric unknown | [x] note in form |
 | K14 | Test period (Jul-Sep) is a new season, drift risk | [x] note in form |
 | K15 | Reasons are approximate (perturbation, not causal) | [x] note in form |
+| K16 | service/catalog.json contains 21 product rows (sku, family, list price, warranty, launch date) copied from products.csv; judged low sensitivity (public catalog); customers.csv is NOT shipped | [x] decided |
 
 ---
 

@@ -8,6 +8,7 @@
 | P3 | Baselines, models, backtests, rupee tables | [x] |
 | P4 | Expected score + final predictions | [x] |
 | P5 | Service + HTML + tests | [x] |
+| P5b | Service revision: catalog.json, CSP, UI rebuild, 26/26 tests pass | [x] |
 | P6 | Evidence report | [x] |
 | P7 | Memo | [x] |
 | P8 | Submission form, handoff, cost, video | [x] |
