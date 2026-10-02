@@ -1,6 +1,6 @@
 # Expected Score Lock-in
 
-_Locked in before final prediction generation per Section 10 of PLAN.md._
+_Locked in before final prediction generation as the prior expected performance target._
 
 ## Metric
 - **Primary Metric:** ROC-AUC (Area Under the Receiver Operating Characteristic Curve)
@@ -20,7 +20,7 @@ Based on out-of-fold temporal cross-validation across 3 rolling-origin folds (tr
 ## Drift & Generalization Caveats
 1. **Seasonal Shift:** Test set spans Q3 (Jul–Sep 2026), Monsoon/pre-festive season in India, whereas training data covers preceding quarters. Product demand patterns and return rates (e.g., Room Heaters vs Ceiling Fans vs Water Purifiers) fluctuate seasonally.
 2. **Customer Base Evolution:** As customer tenure grows and repeat customer proportions increase, `customer_prior_*` features will have broader coverage.
-3. **Right-Censoring Lag:** Orders placed in the final weeks of the test window may exhibit right-censoring lag if evaluated before full 14-day return window completion, though our model is robust to dropping late-window orders (tested sensitivity $\Delta\text{AUC} = -0.0053$).
+3. **Right-Censoring Lag:** Orders placed in the final weeks of the test window may exhibit right-censoring lag if evaluated before full 14-day return window completion, though my model is robust to dropping late-window orders (tested sensitivity $\Delta\text{AUC} = -0.0053$).
 4. **Policy Independence:** Scores reflect pre-dispatch return risk before operational intervention (call confirmation).
 
 _Timestamp: 2026-10-01 18:57:00 IST. Do not modify after final test predictions are generated._

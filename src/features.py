@@ -1,7 +1,7 @@
 """
 src/features.py — Feature engineering pipeline.
 
-Features from PLAN.md Section 8 (order-time only):
+Order-time features:
   sales_channel, payment_mode, discount_pct, qty, order_value_fixed,
   promised_delivery_days, no_address, pincode_prefix (first 3 digits when not 000000),
   is_gift, customer_prior_orders, customer_prior_returns, prior_return_rate,

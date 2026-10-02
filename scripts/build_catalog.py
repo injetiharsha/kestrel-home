@@ -65,7 +65,7 @@ def main():
     # Installable families
     installable = sorted(list(INSTALLABLE_FAMILIES))
 
-    # --- Training ranges for numeric input clamping (Section A.1) ---
+    # --- Training ranges for numeric input clamping ---
     ranges = {
         "discount_pct": [0.0, 60.0],
         "qty": [1, 2],

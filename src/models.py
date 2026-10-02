@@ -1,7 +1,7 @@
 """
 src/models.py — Model definitions and encoding pipeline.
 
-Models (PLAN.md Section 7):
+Models:
   - DummyClassifier (prior baseline)
   - LogisticRegression (primary, regularised)
   - HistGradientBoostingClassifier (challenger)
@@ -67,7 +67,7 @@ def make_lr_pipeline(C=1.0, max_iter=1000):
 def make_hgb_pipeline(max_iter=200, max_depth=4, learning_rate=0.1):
     """HistGradientBoostingClassifier — challenger model."""
     # HGB handles categoricals and missing values natively,
-    # but we keep the same preprocessor for consistency
+    # but I keep the same preprocessor for consistency
     return Pipeline([
         ("preprocessor", _make_preprocessor()),
         ("classifier", HistGradientBoostingClassifier(

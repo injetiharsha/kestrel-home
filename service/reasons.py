@@ -1,7 +1,6 @@
 """
 service/reasons.py — Model-agnostic perturbation reasons engine.
 
-PLAN.md Section 7:
 Replaces each feature with typical baseline values, measures score reduction,
 and maps the top contributors to human-readable plain text sentences.
 """

@@ -1,5 +1,5 @@
 """
-tests/test_blacklist.py — Enforce PLAN.md Section 8 blacklist.
+tests/test_blacklist.py — Enforce feature blacklist.
 
 Blacklisted columns must NEVER appear in the feature matrix:
   returned, last_service_event_type, pickup_scheduled_at, source,

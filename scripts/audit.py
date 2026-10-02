@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-scripts/audit.py — Phase P1 Data Audit
-Reproduces and verifies every number in PLAN.md Section 3.
-Writes results to notes/data_audit.md. Every number comes from code.
+scripts/audit.py — Data Audit Runner
+Reproduces and verifies statistical distributions and data integrity across files.
 """
 
 import pathlib
@@ -12,7 +11,6 @@ from collections import OrderedDict
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
-OUT = ROOT / "notes" / "data_audit.md"
 
 lines: list[str] = []
 
@@ -424,7 +422,7 @@ def main():
     w()
 
     # ------------------------------------------------------------------ #
-    # Additional checks from Section 3.1
+    # Additional verification checks
     # ------------------------------------------------------------------ #
     section("Additional verification")
 

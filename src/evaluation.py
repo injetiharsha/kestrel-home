@@ -1,13 +1,13 @@
 """
 src/evaluation.py — Evaluation: rolling folds, metrics, bootstrap, economics.
 
-Validation design (PLAN.md Section 9):
+Validation design:
   - Rolling time folds, threshold on A, report on B.
   - Fold 1: train to 2025-09-30, test Oct-Dec 2025
   - Fold 2: train to 2025-12-31, test Jan-Mar 2026
   - Fold 3: train to 2026-03-31, test Apr-Jun 2026
 
-Economics (PLAN.md Section 6):
+Economics:
   - Call cost = Rs 45
   - Return cost = Rs 1,150
   - Call prevention rate = 35%
@@ -24,7 +24,7 @@ from sklearn.metrics import (
 
 from src.features import FEATURE_COLS
 
-# Economics constants (Section 6)
+# Economics constants
 CALL_COST = 45          # Rs per call
 RETURN_COST = 1150      # Rs all-in return cost
 CALL_PREVENTION = 0.35  # 35% of returns prevented by call
@@ -32,7 +32,7 @@ HOLD_CANCEL_RATE = 0.12 # 12% of held orders cancel
 MONTHLY_ORDERS = 700    # orders per month
 MARGIN_PCT_A1 = 0.15    # Assumption A1: margin = 15% of order value
 
-# Rolling fold definitions (Section 9)
+# Rolling fold definitions
 FOLDS = [
     {
         "name": "Fold1",

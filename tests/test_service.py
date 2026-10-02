@@ -1,7 +1,6 @@
 """
 tests/test_service.py — Test FastAPI service endpoints and explainability engine.
 
-PLAN.md Section 11 & AGENT_RULES.
 Tests that need data/ files skip cleanly with pytest.skip.
 """
 

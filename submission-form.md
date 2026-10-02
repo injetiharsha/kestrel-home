@@ -6,9 +6,9 @@
 ---
 
 ### What did you build, and what business decision does it support? State the number and the rupees.*
-We built an operational returns risk prediction engine and decision support system for Kestrel Home D2C appliances. It scores pre-dispatch return risk and supports the decision to **trigger targeted pre-dispatch confirmation calls (₹45/call)** on orders exceeding the 0.34 risk threshold, while explicitly rejecting dispatch holds. Shield members receive proactive VIP confirmation calls rather than holds.
+I built an operational returns risk prediction engine and decision support system for Kestrel Home D2C appliances. It scores pre-dispatch return risk and supports the decision to **trigger targeted pre-dispatch confirmation calls (₹45/call)** on orders exceeding the 0.34 risk threshold, while explicitly rejecting dispatch holds. Shield members receive proactive VIP confirmation calls rather than holds.
 
-* **The Number:** Across out-of-sample temporal backtests, our model achieves a **ROC-AUC of 0.7728** (95% CI: [0.739, 0.803]) and **PR-AUC of 0.3949**, successfully flagging **>81% of all returned orders** before warehouse dispatch.
+* **The Number:** Across out-of-sample temporal backtests, my model achieves a **ROC-AUC of 0.7728** (95% CI: [0.739, 0.803]) and **PR-AUC of 0.3949**, successfully flagging **>81% of all returned orders** before warehouse dispatch.
 * **The Rupees:** At 700 orders/month, the confirmation call policy generates **+₹10,785 in net monthly savings** (~₹1.3 Lakhs annually) after deducting agent call costs. By contrast, dispatch holding loses **-₹43,722/month** (due to a 12% customer cancellation rate on held orders), and doing nothing loses **-₹92,252/month** in return costs. Model execution costs **₹0/month**.
 
 ---
@@ -27,7 +27,7 @@ We built an operational returns risk prediction engine and decision support syst
 * **Error Rates & Failure Modes:**
   1. *95% Accuracy Fallacy:* A trivial "always predict NO" model achieves 88.5% accuracy but catches zero returns.
   2. *False Negatives (Missed Returns):* Highest in low base-rate categories (Ceiling Fans: 56.5% FN; Prepaid UPI: 44.9% FN); lowest in Cash on Delivery orders (only 14.3% FN, capturing 85.7% of COD returns).
-  3. *Shield False Positives:* Shield members have a 52.8% False Positive rate because their base return rate is double regular customers (20.7% vs 8.8%). We mitigate this by making polite VIP confirmation calls rather than holding or cancelling orders.
+  3. *Shield False Positives:* Shield members have a 52.8% False Positive rate because their base return rate is double regular customers (20.7% vs 8.8%). I mitigate this by making polite VIP confirmation calls rather than holding or cancelling orders.
   4. *Calibration:* Predicted probabilities monotonically track observed empirical return rates across all 10 deciles (from 0.6% in decile 1 up to 76.9% in decile 10).
 
 ---
@@ -42,12 +42,12 @@ We built an operational returns risk prediction engine and decision support syst
 ---
 
 ### What is wrong with what you are handing us, or with the data we handed you? Be specific: bugs, shortcuts, columns you did not trust, rows that looked wrong. [can only raise your score]*
-1. **651 Duplicate Partner Feed Rows:** `train.csv` contained 651 duplicate orders between `crm` and `partner_feed`. We dropped all `partner_feed` duplicates.
-2. **October 2025 Currency Inflation Bug:** 700 orders during the festive campaign were recorded in paise rather than rupees (e.g. ₹3,500 recorded as ₹350,000). We repaired this by dividing values >5x expected list price by 100.
-3. **Pincode `000000` Walk-In Misconception:** README stated `000000` was purely partner walk-in purchases, but data showed web/app orders with delivery promises. We parsed pincodes as strings and added a dedicated `no_address = 1` flag.
+1. **651 Duplicate Partner Feed Rows:** `train.csv` contained 651 duplicate orders between `crm` and `partner_feed`. I dropped all `partner_feed` duplicates.
+2. **October 2025 Currency Inflation Bug:** 700 orders during the festive campaign were recorded in paise rather than rupees (e.g. ₹3,500 recorded as ₹350,000). I repaired this by dividing values >5x expected list price by 100.
+3. **Pincode `000000` Walk-In Misconception:** README stated `000000` was purely partner walk-in purchases, but data showed web/app orders with delivery promises. I parsed pincodes as strings and added a dedicated `no_address = 1` flag.
 4. **Post-Order Leakage Columns:** `pickup_scheduled_at` was populated on 1,281 training rows (109 of which were cancelled pickups with `returned = 0`) but was 100% blank in the unlabelled test set. Both `pickup_scheduled_at` and `last_service_event_type` were blacklisted.
 5. **Right-Censoring Lag (Up to 19 Days):** Orders placed in the final 2–3 weeks of training windows have uncompleted return windows.
-6. **Customer Prior History Monotonicity:** Customer prior order/return counters exhibited non-monotonic tracking across order dates; we kept them due to strong empirical predictive signal but flagged the limitation.
+6. **Customer Prior History Monotonicity:** Customer prior order/return counters exhibited non-monotonic tracking across order dates; I kept them due to strong empirical predictive signal but flagged the limitation.
 
 ---
 

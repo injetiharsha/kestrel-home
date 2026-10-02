@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """
 scripts/predict.py — Final model training on all deduped training data and test inference.
-
-PLAN.md Section 10 & Phase P4.
 """
 
 import pathlib

@@ -6,7 +6,7 @@ _All metrics and figures generated deterministically from code execution (`scrip
 
 ## 1. Executive Summary & Validation Methodology
 
-We evaluated returns prediction models using **rolling-origin temporal cross-validation**. Because return dynamics evolve over time, random K-Fold splits leak future temporal structure and overstate performance. 
+I evaluated returns prediction models using **rolling-origin temporal cross-validation**. Because return dynamics evolve over time, random K-Fold splits leak future temporal structure and overstate performance. 
 
 - **Window A (Fold 1):** Historical data up to `2025-09-30` used for feature training; `2025-10-01` to `2025-12-31` used to determine the optimal economic decision threshold (`0.34`).
 - **Windows B (Folds 2 & 3):** Evaluated strictly out-of-sample on later time periods using the locked threshold from Window A.
@@ -143,7 +143,7 @@ A False Positive (FP) occurs when an order is flagged for a call, but the custom
    - Shield Orders Flagged: 285 orders (60.2%)
    - **False Positive Rate:** **52.8%**
    - **Analysis:** Shield members exhibit more than double the base return rate of regular customers (20.7% vs 8.8%) due to free return privileges. The model naturally flags a higher proportion of Shield members.
-   - **Operational Mitigation:** Because our policy is **confirmation calls** (not order holds or cancellations), calling a Shield member provides proactive concierge service rather than order disruption.
+   - **Operational Mitigation:** Because my recommended policy is **confirmation calls** (not order holds or cancellations), calling a Shield member provides proactive concierge service rather than order disruption.
 
 2. **Non-Shield Members:**
    - Total Non-Shield Orders in Fold 3: N=1,630 (Return rate: **8.8%**)

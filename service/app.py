@@ -63,7 +63,7 @@ app = FastAPI(
 
 
 # -------------------------------------------------------------------------- #
-# CSP Middleware (PLAN.md Section 11)
+# CSP Middleware
 # -------------------------------------------------------------------------- #
 @app.middleware("http")
 async def add_csp_header(request: Request, call_next):
@@ -88,7 +88,7 @@ CATALOG: Dict[str, Any] = {}
 PRODUCTS_LOOKUP: Dict[str, Dict[str, Any]] = {}
 VALID_STATES: List[str] = []
 
-# Operational Threshold (Section 6 & 9: 0.34 optimal cutoff from Window A)
+# Operational Threshold (0.34 optimal cutoff from Window A)
 DECISION_THRESHOLD = 0.34
 LOW_RISK_CUTOFF = 0.25
 MODEL_VERSION = "1.0.0-logistic-regression"
@@ -280,7 +280,7 @@ def predict_return_risk(order: OrderInput):
         no_address = 0
         pincode_prefix = pincode_raw[:3]
 
-    # 6. Numeric input clamping to training ranges (Section A.1)
+    # 6. Numeric input clamping to training ranges
     ranges = CATALOG.get("ranges", {})
 
     # discount_pct: [0, 60]

@@ -6,8 +6,6 @@ Outputs:
   - outputs/economics.json (structured results)
   - validation/EVIDENCE.md (draft evidence report)
   - outputs/model_lr.joblib (final LR model trained on all data)
-
-PLAN.md Sections 6, 7, 9, 15.
 """
 
 import sys
