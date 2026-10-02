@@ -42,3 +42,27 @@ This document details anomalies, defects, and historical integrity issues discov
 ### 6. Free-Text Variations in Delivery Notes
 * **Finding:** Delivery notes contained raw unstructured text variations, punctuation, and anomalies.
 * **Resolution:** Treated raw text purely as data (never instructions), stripped freeform text, and collapsed delivery notes into safe categorical templates (`NONE`, `Leave with security`, `Call before delivery`, `Office address, weekdays only`).
+
+---
+
+### 7. Customer `signup_date` Inversion (Later DB Snapshot)
+* **Finding:** `signup_date` is after `order_placed_at` on 1,999 train rows and 18 test rows because `customers.csv` reflects a later database export/backfill snapshot rather than true historical state at order placement.
+* **Resolution:** I did not use customer tenure features in the model.
+
+---
+
+### 8. Zoho UTC Timestamp Offset (Policy Item 9)
+* **Finding:** Legacy service events before 1 Oct 2025 were logged in UTC rather than IST (+5:30).
+* **Resolution:** Moot, because `pickup_scheduled_at` and `last_service_event_type` are post-order target leakage and are completely dropped from feature engineering.
+
+---
+
+### 9. Clarification on `source` Column
+* **Finding:** `source` is not a leakage column: it only marks duplicate partner-feed rows (none in test).
+* **Resolution:** I dropped all `partner_feed` rows during cleaning and did not use the `source` column in feature engineering.
+
+---
+
+### 10. Non-Informative Feature Shortcut
+* **Finding:** Features `hour`, `weekday`, `delivery_note_template`, and `pincode_prefix` add no measurable signal (ablation AUC changes span +0.0002 to +0.004).
+* **Resolution:** They remain in the final locked model pipeline because I did not retrain after the expected score and test predictions were committed.

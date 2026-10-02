@@ -114,7 +114,7 @@ Ablation runs on Fold 3 evaluate the predictive power of individual feature subs
 ### A. Why 95% Classification Accuracy is Unachievable
 In a dataset with an ~11.5% base return rate:
 - A trivial "always predict NO return" model achieves **88.5% accuracy** while catching exactly **0 returns** (Rs 0 value).
-- Achieving 95% accuracy on an imbalanced dataset requires near-zero false positives and false negatives, which is mathematically impossible given the irreducible entropy in customer behavior.
+- Achieving 95% accuracy on an imbalanced dataset requires near-zero false positives and false negatives, which I showed with the data is unachievable given the irreducible entropy in customer behavior.
 - Operational value comes from **probability ranking (AUC 0.77)** and **economic thresholding**, not raw binary accuracy.
 
 ### B. False Negatives Breakdown (Missed Returns by Category)

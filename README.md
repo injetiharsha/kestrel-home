@@ -131,7 +131,6 @@ Returns product catalog, valid states, categories, and training clamping ranges.
 │   ├── test_blacklist.py  # 18 blacklist & leakage prevention tests (clean-machine skip)
 │   └── test_service.py    # 12 API, clamping sweep, and explainability tests
 ├── requirements.txt       # Pinned dependencies
-├── submission-form.md     # Complete engagement submission form
 └── validation/
     └── EVIDENCE.md        # Deterministic validation evidence report
 ```

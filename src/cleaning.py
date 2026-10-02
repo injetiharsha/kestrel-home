@@ -62,7 +62,7 @@ def clean_train(df: pd.DataFrame, products: pd.DataFrame) -> pd.DataFrame:
     # 5. Delivery note template (not raw text)
     df["delivery_note_template"] = df["delivery_note"].apply(_delivery_note_template)
 
-    # 6. Drop blacklisted / leakage columns
+    # 6. Drop blacklisted post-order leakage and duplicate columns
     cols_to_drop = [
         "last_service_event_type",
         "pickup_scheduled_at",
@@ -91,7 +91,7 @@ def clean_test(df: pd.DataFrame, products: pd.DataFrame) -> pd.DataFrame:
     # Delivery note template
     df["delivery_note_template"] = df["delivery_note"].apply(_delivery_note_template)
 
-    # Drop blacklisted / leakage columns
+    # Drop blacklisted post-order leakage and duplicate columns
     cols_to_drop = [
         "last_service_event_type",
         "pickup_scheduled_at",

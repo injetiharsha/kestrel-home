@@ -7,7 +7,7 @@ This document records the foundational positions, pushbacks, and technical decis
 ### 1. Pushing Back on the 95% Accuracy Expectation
 * **Client Request:** Ritu (Head of D2C Ops) requested 95%+ accuracy to report to the board.
 * **My Decision:** Explicitly rejected the 95% classification accuracy target as scientifically invalid for this problem.
-* **Rationale:** Returns represent only ~11.5% of orders. A naive, useless model predicting "NO return" on every order achieves **88.5% accuracy** with zero operational value. In severe class imbalance with human behavioral entropy, 95% accuracy is mathematically unachievable without suppressing almost all true returns.
+* **Rationale:** Returns represent only ~11.5% of orders. A naive, useless model predicting "NO return" on every order achieves **88.5% accuracy** with zero operational value. In severe class imbalance with human behavioral entropy, 95% accuracy is unachievable without suppressing almost all true returns, as I showed with the data.
 * **Alternative Provided:** Replaced accuracy with ROC-AUC (`0.77`), PR-AUC (`0.39`), and rupee net savings (+₹10,785/month) at economically calibrated operating thresholds.
 
 ---

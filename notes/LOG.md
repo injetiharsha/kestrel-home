@@ -21,3 +21,4 @@
 - [NOTE] 2026-10-02 15:27:39 — Completed Phase P5b service revision
 - [NOTE] 2026-10-02 15:47:55 — P5c fixes and trim
 - [NOTE] 2026-10-02 15:59:46 — P5d first-person pass and final validation
+- [NOTE] 2026-10-02 16:13:01 — P5e repo notes fix, form removed

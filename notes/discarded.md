@@ -28,6 +28,6 @@ This document catalogs approaches, features, and model concepts that were explor
 
 ---
 
-### 5. Order Timing Features (`hour`, `weekday`)
-* **What was tried:** Extracted purchase hour of day and day of week.
-* **Why discarded:** Ablation study showed $\Delta\text{AUC} = +0.0002$ when dropped. Order placement hour is largely noise in appliance D2C purchasing.
+### 5. Order Timing Features (hour, weekday) - tested, NOT removed
+* Ablation (outputs/economics.json): dropping them changes AUC by +0.0002 (0.7728 to 0.7730). Negligible.
+* They stay in the final model because I did not retrain after the expected score and predictions were locked. A cleaner model would drop them, plus delivery_note_template and pincode_prefix (dropping either gave AUC about 0.777).

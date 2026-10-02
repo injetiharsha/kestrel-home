@@ -16,7 +16,7 @@ This document records engineering and statistical approaches that were evaluated
 
 ### 2. Rejection of Heavy Non-Linear Tree Ensembles (HistGradientBoosting)
 * **Alternative Considered:** Non-linear gradient boosted trees (`HistGradientBoostingClassifier`) for return classification.
-* **Why Rejected:** In our strict rolling temporal cross-validation, `LogisticRegression` outperformed `HistGradientBoosting` on both discrimination (AUC 0.7728 vs 0.7546) and economics (+₹12,436 vs +₹11,282 on Fold 3). Logistic regression generalized better to future quarters, avoided tree-overfitting on categorical noise, and enabled clean linear perturbation explainability.
+* **Why Rejected:** In my strict rolling temporal cross-validation, `LogisticRegression` outperformed `HistGradientBoosting` on both discrimination (AUC 0.7728 vs 0.7546) and economics (+₹12,436 vs +₹11,282 on Fold 3). Logistic regression generalized better to future quarters, avoided tree-overfitting on categorical noise, and enabled clean linear perturbation explainability.
 
 ---
 
@@ -35,3 +35,9 @@ This document records engineering and statistical approaches that were evaluated
 ### 5. Rejection of Heavy SHAP Dependency for Explainability
 * **Alternative Considered:** Installing and running the full Python SHAP library for post-hoc explanation.
 * **Why Rejected:** SHAP introduces heavy native C++ build dependencies that risk failure on fresh clean machines. Replaced with model-agnostic feature perturbation against baseline values (`service/reasons.py`), yielding instant, deterministic top-3 risk reasons with zero additional dependencies.
+
+---
+
+### 6. Non-Informative Feature Shortcut
+* **Trade-off:** Features `hour`, `weekday`, `delivery_note_template`, and `pincode_prefix` add no measurable signal (ablation AUC changes span +0.0002 to +0.004).
+* **Why Retained:** They remain in the final model because I did not retrain after the expected score and predictions were locked. A cleaner future iteration would drop them.
