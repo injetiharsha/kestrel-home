@@ -131,22 +131,22 @@ def test_predict_high_risk(client):
 
 
 def test_predict_validation_error(client):
-    """POST /predict with invalid data returns polite 422 error."""
-    # Invalid payment_mode and negative qty
+    """POST /predict with invalid payment_mode returns polite 422 error."""
     payload = {
         "sku": "KH-RV-01",
         "payment_mode": "bitcoins",
-        "qty": -5,
-        "discount_pct": 150.0,
     }
     resp = client.post("/predict", json=payload)
     assert resp.status_code == 422
     data = resp.json()
-    assert "detail" in data or "errors" in data
+    assert "detail" in data
+    assert "errors" in data
+    assert data["message"] == "Validation error"
+    assert any("payment_mode" in e for e in data["errors"])
 
 
 def test_predict_unknown_sku_422(client):
-    """POST /predict with unknown SKU returns 422 (not silent fallback)."""
+    """POST /predict with unknown SKU returns 422 standardized shape."""
     payload = {
         "order_id": "KO_UNKNOWN_SKU",
         "sku": "KH-UNKNOWN-99",
@@ -156,4 +156,70 @@ def test_predict_unknown_sku_422(client):
     resp = client.post("/predict", json=payload)
     assert resp.status_code == 422
     data = resp.json()
-    assert "Unknown SKU" in data.get("detail", "")
+    assert "Unknown SKU" in data["detail"]
+    assert "errors" in data
+    assert any("sku" in e for e in data["errors"])
+    assert data["message"] == "Validation error"
+
+
+def test_predict_invalid_pincode_422(client):
+    """POST /predict with invalid pincode '12' returns 422 standardized shape."""
+    payload = {
+        "sku": "KH-RV-01",
+        "delivery_pincode": "12",
+    }
+    resp = client.post("/predict", json=payload)
+    assert resp.status_code == 422
+    data = resp.json()
+    assert "Invalid delivery pincode" in data["detail"]
+    assert "errors" in data
+    assert any("delivery_pincode" in e for e in data["errors"])
+    assert data["message"] == "Validation error"
+
+
+def test_predict_discount_clamp_sweep(client):
+    """Sweep discount percentage: 0%, 30%, 80% (clamped to 60 with warning)."""
+    # 0% discount
+    r0 = client.post("/predict", json={"sku": "KH-MG-01", "discount_pct": 0.0})
+    assert r0.status_code == 200
+    assert not any("Discount" in w for w in r0.json().get("warnings", []))
+
+    # 30% discount
+    r30 = client.post("/predict", json={"sku": "KH-MG-01", "discount_pct": 30.0})
+    assert r30.status_code == 200
+    assert not any("Discount" in w for w in r30.json().get("warnings", []))
+
+    # 80% discount (clamped to 60.0)
+    r80 = client.post("/predict", json={"sku": "KH-MG-01", "discount_pct": 80.0})
+    assert r80.status_code == 200
+    warnings = r80.json().get("warnings", [])
+    assert any("Discount 80.0% clamped" in w for w in warnings)
+
+
+def test_predict_qty_clamp_sweep(client):
+    """Sweep quantity: 1, 2, 10 (clamped to 2 with warning)."""
+    r1 = client.post("/predict", json={"sku": "KH-MG-01", "qty": 1})
+    assert r1.status_code == 200
+    assert not any("Quantity" in w for w in r1.json().get("warnings", []))
+
+    r2 = client.post("/predict", json={"sku": "KH-MG-01", "qty": 2})
+    assert r2.status_code == 200
+    assert not any("Quantity" in w for w in r2.json().get("warnings", []))
+
+    r10 = client.post("/predict", json={"sku": "KH-MG-01", "qty": 10})
+    assert r10.status_code == 200
+    warnings = r10.json().get("warnings", [])
+    assert any("Quantity 10 clamped" in w for w in warnings)
+
+
+def test_predict_order_value_clamp_sweep(client):
+    """Sweep order value: 5000 (normal), 1000000 (clamped to 60000 with warning)."""
+    r_normal = client.post("/predict", json={"sku": "KH-MG-01", "order_value_inr": 5000.0})
+    assert r_normal.status_code == 200
+    assert not any("Order value" in w for w in r_normal.json().get("warnings", []))
+
+    r_huge = client.post("/predict", json={"sku": "KH-MG-01", "order_value_inr": 1000000.0})
+    assert r_huge.status_code == 200
+    warnings = r_huge.json().get("warnings", [])
+    assert any("Order value" in w and "clamped" in w for w in warnings)
+

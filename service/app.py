@@ -120,14 +120,14 @@ class OrderInput(BaseModel):
     sku: str = Field(..., description="Product SKU (e.g. KH-RV-01, KH-MG-01)")
     sales_channel: str = Field(default="web", description="Sales channel: web, app, marketplace")
     payment_mode: str = Field(default="prepaid_upi", description="Payment mode: cod, prepaid_upi, prepaid_card, emi")
-    discount_pct: float = Field(default=0.0, ge=0.0, le=100.0, description="Discount percentage (0-100)")
-    qty: int = Field(default=1, ge=1, le=50, description="Quantity of items")
-    order_value_inr: Optional[float] = Field(default=None, ge=0.0, description="Order value in INR")
-    promised_delivery_days: int = Field(default=3, ge=1, le=30, description="Promised delivery timeline in days")
+    discount_pct: float = Field(default=0.0, description="Discount percentage")
+    qty: int = Field(default=1, description="Quantity of items")
+    order_value_inr: Optional[float] = Field(default=None, description="Order value in INR")
+    promised_delivery_days: int = Field(default=3, description="Promised delivery timeline in days")
     delivery_pincode: str = Field(default="411001", description="6-digit delivery pincode or 000000")
     is_gift: str = Field(default="N", description="Gift order flag: Y or N")
-    customer_prior_orders: int = Field(default=0, ge=0, description="Number of prior orders placed by customer")
-    customer_prior_returns: int = Field(default=0, ge=0, description="Number of prior returns by customer")
+    customer_prior_orders: int = Field(default=0, description="Number of prior orders placed by customer")
+    customer_prior_returns: int = Field(default=0, description="Number of prior returns by customer")
     delivery_note: Optional[str] = Field(default="", description="Customer delivery note text")
     shield_member: str = Field(default="N", description="Shield membership flag: Y or N")
     state: str = Field(default="MH", description="Delivery State code (e.g. MH, KA, DL)")
@@ -187,12 +187,13 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         field = " -> ".join(str(loc) for loc in err.get("loc", []))
         msg = err.get("msg", "Invalid input")
         errors.append(f"{field}: {msg}")
+    detail_msg = errors[0] if errors else "Input validation error"
     return JSONResponse(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
         content={
-            "detail": "Input validation error",
+            "detail": detail_msg,
             "errors": errors,
-            "message": "Please review and correct the submitted order fields.",
+            "message": "Validation error",
         },
     )
 
@@ -218,25 +219,41 @@ def get_catalog():
     return CATALOG
 
 
-@app.post("/predict", response_model=PredictionResponse)
+@app.post("/predict")
 def predict_return_risk(order: OrderInput):
     """Score pre-dispatch return risk for a single order."""
     if MODEL is None:
         load_resources()
         if MODEL is None:
-            raise HTTPException(
+            return JSONResponse(
                 status_code=500,
-                detail="Model artifact 'outputs/model_lr.joblib' is not available.",
+                content={"detail": "Model artifact 'outputs/model_lr.joblib' is not available."},
             )
 
     warnings: List[str] = []
 
-    # 1. Product SKU Lookup — unknown SKU is 422, not silent fallback
+    # 1. Product SKU Lookup — unknown SKU is 422 with standardized error shape
     sku_info = PRODUCTS_LOOKUP.get(order.sku)
     if not sku_info:
-        raise HTTPException(
+        return JSONResponse(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail=f"Unknown SKU '{order.sku}'. Use GET /catalog to see valid SKUs.",
+            content={
+                "detail": f"Unknown SKU '{order.sku}'. Use GET /catalog to see valid SKUs.",
+                "errors": [f"body -> sku: Unknown SKU '{order.sku}'. Use GET /catalog to see valid SKUs."],
+                "message": "Validation error",
+            },
+        )
+
+    # 2. Pincode validation: must be exactly 6 digits, else 422
+    pincode_raw = str(order.delivery_pincode).strip()
+    if len(pincode_raw) != 6 or not pincode_raw.isdigit():
+        return JSONResponse(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            content={
+                "detail": f"Invalid delivery pincode '{order.delivery_pincode}'. Pincode must be exactly 6 digits.",
+                "errors": [f"body -> delivery_pincode: Invalid delivery pincode '{order.delivery_pincode}'. Pincode must be exactly 6 digits."],
+                "message": "Validation error",
+            },
         )
 
     family = sku_info["family"]
@@ -245,40 +262,111 @@ def predict_return_risk(order: OrderInput):
     launch_date = pd.to_datetime(sku_info["launch_date"])
     installable = 1 if family in INSTALLABLE_FAMILIES else 0
 
-    # 2. State validation
+    # 3. State validation
     state = order.state
     if VALID_STATES and state not in VALID_STATES:
         warnings.append(f"State '{state}' not in training data; defaulting to MH.")
         state = "MH"
 
-    # 3. Shield member
+    # 4. Shield member
     shield_member = order.shield_member
 
-    # 4. Order Value Calculation / Fix
-    if order.order_value_inr is not None and order.order_value_inr > 0:
-        order_value_fixed = float(order.order_value_inr)
-    else:
-        order_value_fixed = float(list_price_inr * order.qty * (1.0 - (order.discount_pct / 100.0)))
-
-    # 5. Pincode & Address
-    pincode_str = str(order.delivery_pincode).strip().zfill(6)
-    if pincode_str == "000000" or not pincode_str.isdigit() or len(pincode_str) != 6:
+    # 5. Pincode features
+    if pincode_raw == "000000":
         no_address = 1
         pincode_prefix = "000"
-        if pincode_str == "000000":
-            warnings.append("Delivery pincode is 000000 (unverified address).")
+        warnings.append("Delivery pincode is 000000 (unverified address / walk-in).")
     else:
         no_address = 0
-        pincode_prefix = pincode_str[:3]
+        pincode_prefix = pincode_raw[:3]
 
-    # 6. Customer History
-    prior_orders = max(0, int(order.customer_prior_orders))
-    prior_returns = max(0, int(order.customer_prior_returns))
+    # 6. Numeric input clamping to training ranges (Section A.1)
+    ranges = CATALOG.get("ranges", {})
+
+    # discount_pct: [0, 60]
+    disc_min, disc_max = ranges.get("discount_pct", [0.0, 60.0])
+    raw_discount = float(order.discount_pct)
+    if raw_discount < disc_min:
+        discount_pct = disc_min
+        warnings.append(f"Discount {raw_discount}% clamped to training min ({disc_min}%).")
+    elif raw_discount > disc_max:
+        discount_pct = disc_max
+        warnings.append(f"Discount {raw_discount}% clamped to training max ({disc_max}%).")
+    else:
+        discount_pct = raw_discount
+
+    # qty: [1, 2]
+    qty_min, qty_max = ranges.get("qty", [1, 2])
+    raw_qty = int(order.qty)
+    if raw_qty < qty_min:
+        qty = qty_min
+        warnings.append(f"Quantity {raw_qty} clamped to training min ({qty_min}).")
+    elif raw_qty > qty_max:
+        qty = qty_max
+        warnings.append(f"Quantity {raw_qty} clamped to training max ({qty_max}).")
+    else:
+        qty = raw_qty
+
+    # promised_delivery_days: [1, 12]
+    pdd_min, pdd_max = ranges.get("promised_delivery_days", [1, 12])
+    raw_pdd = int(order.promised_delivery_days)
+    if raw_pdd < pdd_min:
+        promised_delivery_days = pdd_min
+        warnings.append(f"Promised delivery days {raw_pdd} clamped to training min ({pdd_min}).")
+    elif raw_pdd > pdd_max:
+        promised_delivery_days = pdd_max
+        warnings.append(f"Promised delivery days {raw_pdd} clamped to training max ({pdd_max}).")
+    else:
+        promised_delivery_days = raw_pdd
+
+    # customer_prior_orders: [0, 10]
+    cpo_min, cpo_max = ranges.get("customer_prior_orders", [0, 10])
+    raw_cpo = int(order.customer_prior_orders)
+    if raw_cpo < cpo_min:
+        prior_orders = cpo_min
+        warnings.append(f"Customer prior orders {raw_cpo} clamped to training min ({cpo_min}).")
+    elif raw_cpo > cpo_max:
+        prior_orders = cpo_max
+        warnings.append(f"Customer prior orders {raw_cpo} clamped to training max ({cpo_max}).")
+    else:
+        prior_orders = raw_cpo
+
+    # customer_prior_returns: [0, 6]
+    cpr_min, cpr_max = ranges.get("customer_prior_returns", [0, 6])
+    raw_cpr = int(order.customer_prior_returns)
+    if raw_cpr < cpr_min:
+        prior_returns = cpr_min
+        warnings.append(f"Customer prior returns {raw_cpr} clamped to training min ({cpr_min}).")
+    elif raw_cpr > cpr_max:
+        prior_returns = cpr_max
+        warnings.append(f"Customer prior returns {raw_cpr} clamped to training max ({cpr_max}).")
+    else:
+        prior_returns = raw_cpr
+
     if prior_returns > prior_orders:
         prior_orders = prior_returns
         warnings.append(f"Adjusted prior orders ({prior_orders}) to match prior returns ({prior_returns}).")
 
     prior_return_rate = (prior_returns / prior_orders) if prior_orders > 0 else 0.0
+
+    # order_value_inr: [1000, 60000] (optional)
+    ov_min, ov_max = ranges.get("order_value_inr", [1000.0, 60000.0])
+    if order.order_value_inr is not None and order.order_value_inr > 0:
+        raw_ov = float(order.order_value_inr)
+        if raw_ov < ov_min:
+            order_value_fixed = ov_min
+            warnings.append(f"Order value ₹{raw_ov:,.0f} clamped to training min (₹{ov_min:,.0f}).")
+        elif raw_ov > ov_max:
+            order_value_fixed = ov_max
+            warnings.append(f"Order value ₹{raw_ov:,.0f} clamped to training max (₹{ov_max:,.0f}).")
+        else:
+            order_value_fixed = raw_ov
+    else:
+        order_value_fixed = float(list_price_inr * qty * (1.0 - (discount_pct / 100.0)))
+        if order_value_fixed < ov_min:
+            order_value_fixed = ov_min
+        elif order_value_fixed > ov_max:
+            order_value_fixed = ov_max
 
     # 7. Dates & Time
     try:
@@ -296,10 +384,10 @@ def predict_return_risk(order: OrderInput):
 
     # 9. Assemble Feature Row
     feature_data = {
-        "discount_pct": [float(order.discount_pct)],
-        "qty": [int(order.qty)],
+        "discount_pct": [float(discount_pct)],
+        "qty": [int(qty)],
         "order_value_fixed": [float(order_value_fixed)],
-        "promised_delivery_days": [int(order.promised_delivery_days)],
+        "promised_delivery_days": [int(promised_delivery_days)],
         "no_address": [int(no_address)],
         "customer_prior_orders": [int(prior_orders)],
         "customer_prior_returns": [int(prior_returns)],

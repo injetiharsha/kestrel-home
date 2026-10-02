@@ -32,7 +32,10 @@ DATA = ROOT / "data"
 @pytest.fixture(scope="module")
 def cleaned_data():
     """Load and clean train data once for all tests."""
-    train_raw = pd.read_csv(DATA / "train.csv")
+    train_path = DATA / "train.csv"
+    if not train_path.exists():
+        pytest.skip("data/ not present")
+    train_raw = pd.read_csv(train_path)
     products = load_products()
     customers = load_customers()
     train_clean = clean_train(train_raw, products)

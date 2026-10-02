@@ -65,15 +65,37 @@ def main():
     # Installable families
     installable = sorted(list(INSTALLABLE_FAMILIES))
 
+    # --- Training ranges for numeric input clamping (Section A.1) ---
+    ranges = {
+        "discount_pct": [0.0, 60.0],
+        "qty": [1, 2],
+        "promised_delivery_days": [1, 12],
+        "customer_prior_orders": [0, 10],
+        "customer_prior_returns": [0, 6],
+        "order_value_inr": [1000.0, 60000.0],
+    }
+    train_path = ROOT / "data" / "train.csv"
+    if train_path.exists():
+        from src.cleaning import clean_train
+        train_raw = pd.read_csv(train_path)
+        ctrain = clean_train(train_raw, products)
+        ranges["discount_pct"] = [float(ctrain["discount_pct"].min()), float(ctrain["discount_pct"].max())]
+        ranges["qty"] = [int(ctrain["qty"].min()), int(ctrain["qty"].max())]
+        ranges["promised_delivery_days"] = [int(ctrain["promised_delivery_days"].min()), int(ctrain["promised_delivery_days"].max())]
+        ranges["customer_prior_orders"] = [int(ctrain["customer_prior_orders"].min()), int(ctrain["customer_prior_orders"].max())]
+        ranges["customer_prior_returns"] = [int(ctrain["customer_prior_returns"].min()), int(ctrain["customer_prior_returns"].max())]
+        ranges["order_value_inr"] = [1000.0, 60000.0]
+
     catalog = {
         "products": product_rows,
         "states": states,
         "categories": categories,
         "installable_families": installable,
+        "ranges": ranges,
     }
 
     OUTPUT_PATH.write_text(json.dumps(catalog, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"[build_catalog] Wrote {len(product_rows)} products, {len(states)} states to {OUTPUT_PATH}")
+    print(f"[build_catalog] Wrote {len(product_rows)} products, {len(states)} states, ranges to {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":

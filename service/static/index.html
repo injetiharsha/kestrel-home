@@ -8,7 +8,7 @@
 <style>
 /* ================================================================
    DESIGN SYSTEM — Kestrel Home Risk Engine
-   system-ui stack · no CDN · WCAG AA · light + dark
+   system-ui stack · no CDN · no localStorage · WCAG AA · light + dark
    ================================================================ */
 
 /* --- Tokens --- */
@@ -16,15 +16,13 @@
   --font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --mono: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
   --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
   --radius-full: 9999px;
   --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
   --shadow-md: 0 4px 16px rgba(0,0,0,.12);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,.18);
   --shadow-glow: 0 0 24px rgba(99,102,241,.25);
-  --transition: .25s cubic-bezier(.4,0,.2,1);
-  --transition-slow: .5s cubic-bezier(.4,0,.2,1);
+  --transition: .2s cubic-bezier(.4,0,.2,1);
 }
 
 /* Dark theme (default) */
@@ -33,8 +31,8 @@
   --bg-1: #111827;
   --bg-2: #1e293b;
   --bg-3: #334155;
-  --surface: rgba(30,41,59,.65);
-  --surface-hover: rgba(51,65,85,.8);
+  --surface: rgba(30,41,59,.7);
+  --surface-hover: rgba(51,65,85,.85);
   --border: rgba(148,163,184,.15);
   --border-focus: rgba(99,102,241,.6);
   --text-0: #f1f5f9;
@@ -51,7 +49,6 @@
   --risk-high: #f87171;
   --risk-high-bg: rgba(248,113,113,.12);
   --gauge-track: #1e293b;
-  --success: #34d399;
   --error: #f87171;
 }
 
@@ -61,7 +58,7 @@
   --bg-1: #ffffff;
   --bg-2: #f1f5f9;
   --bg-3: #e2e8f0;
-  --surface: rgba(255,255,255,.85);
+  --surface: rgba(255,255,255,.9);
   --surface-hover: rgba(241,245,249,.95);
   --border: rgba(148,163,184,.25);
   --border-focus: rgba(99,102,241,.6);
@@ -79,18 +76,17 @@
   --risk-high: #dc2626;
   --risk-high-bg: rgba(220,38,38,.08);
   --gauge-track: #e2e8f0;
-  --success: #059669;
   --error: #dc2626;
 }
 
-/* --- Reset & Layout --- */
+/* --- Reset & Base Layout --- */
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 html { height: 100%; }
 body {
   font-family: var(--font);
   background: var(--bg-0);
   color: var(--text-0);
-  line-height: 1.5;
+  line-height: 1.45;
   height: 100vh;
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
@@ -108,42 +104,41 @@ body {
 .app-header {
   flex-shrink: 0;
   background: var(--surface);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
-  padding: 0 20px;
+  padding: 0 16px;
 }
 .header-inner {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 50px;
+  height: 48px;
 }
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   text-decoration: none;
   color: var(--text-0);
 }
 .logo-icon {
-  width: 30px; height: 30px;
+  width: 28px; height: 28px;
   background: linear-gradient(135deg, var(--accent), #a855f7);
   border-radius: var(--radius-sm);
   display: flex; align-items: center; justify-content: center;
-  font-size: 15px; font-weight: 700; color: #fff;
-  box-shadow: var(--shadow-sm);
+  font-size: 14px; font-weight: 700; color: #fff;
 }
-.logo-text { font-size: 15px; font-weight: 700; letter-spacing: -.2px; }
-.logo-sub { font-size: 11px; color: var(--text-2); font-weight: 400; margin-left: 6px; }
+.logo-text { font-size: 14px; font-weight: 700; letter-spacing: -.2px; }
+.logo-sub { font-size: 11px; color: var(--text-2); font-weight: 400; margin-left: 4px; }
 
-.header-actions { display: flex; align-items: center; gap: 10px; }
+.header-actions { display: flex; align-items: center; gap: 8px; }
 
 /* Theme toggle */
 .theme-toggle {
-  width: 32px; height: 32px;
+  width: 30px; height: 30px;
   border: 1px solid var(--border);
   border-radius: var(--radius-full);
   background: transparent;
@@ -151,16 +146,16 @@ body {
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   transition: var(--transition);
-  font-size: 15px;
+  font-size: 14px;
 }
 .theme-toggle:hover { background: var(--surface-hover); color: var(--accent); }
 
 /* Status badge */
 .status-badge {
-  display: flex; align-items: center; gap: 6px;
-  padding: 4px 10px;
+  display: flex; align-items: center; gap: 5px;
+  padding: 3px 8px;
   border-radius: var(--radius-full);
-  font-size: 11px; font-weight: 600;
+  font-size: 10px; font-weight: 600;
   letter-spacing: .3px;
   text-transform: uppercase;
 }
@@ -181,13 +176,13 @@ body {
 .app-main {
   flex: 1;
   min-height: 0;
-  max-width: 1400px;
+  max-width: 1440px;
   width: 100%;
   margin: 0 auto;
-  padding: 12px 20px;
+  padding: 10px 16px;
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 16px;
+  grid-template-columns: 1.18fr 0.82fr;
+  gap: 14px;
   align-items: stretch;
   overflow: hidden;
 }
@@ -198,73 +193,186 @@ body {
   backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 16px 20px;
+  padding: 14px 16px;
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   min-height: 0;
 }
-.card-title {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-0);
-  margin-bottom: 12px;
+.card-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 10px;
   flex-shrink: 0;
 }
-.card-title .icon { font-size: 16px; }
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-0);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.card-title .icon { font-size: 15px; }
+
+/* Presets bar */
+.presets-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.preset-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.preset-btn {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--text-1);
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.preset-btn:hover {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--text-0);
+}
 
 /* Form */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px 12px;
+  gap: 6px 10px;
   align-content: start;
 }
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
+  position: relative;
 }
 .form-group.col-span-2 { grid-column: span 2; }
 .form-group.col-span-3 { grid-column: span 3; }
 .form-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-2);
   letter-spacing: .3px;
   text-transform: uppercase;
 }
 .form-control {
-  height: 34px;
-  padding: 0 10px;
+  height: 32px;
+  padding: 0 8px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--bg-2);
   color: var(--text-0);
   font-family: var(--font);
-  font-size: 13px;
+  font-size: 12px;
   transition: var(--transition);
   outline: none;
   appearance: none;
   -webkit-appearance: none;
 }
 select.form-control {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 26px;
+  background-position: right 8px center;
+  padding-right: 22px;
 }
 .form-control:hover { border-color: var(--text-3); }
 .form-control:focus { border-color: var(--border-focus); box-shadow: 0 0 0 2px var(--accent-bg); }
+.form-control.input-error, .form-control[aria-invalid="true"] {
+  border-color: var(--error) !important;
+  box-shadow: 0 0 0 2px rgba(248,113,113,.2) !important;
+}
+.field-error-msg {
+  font-size: 10px;
+  color: var(--error);
+  display: none;
+  margin-top: 1px;
+}
+.field-error-msg.visible { display: block; }
+
+/* Segmented Control */
+.segmented-control {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  height: 32px;
+  padding: 2px;
+  gap: 2px;
+}
+.seg-btn {
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.seg-btn.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Advanced details collapsible */
+.advanced-disclosure {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+}
+.advanced-disclosure summary {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-2);
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.advanced-disclosure summary:hover { color: var(--accent); }
+.advanced-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px 10px;
+  margin-top: 6px;
+  padding: 8px;
+  background: var(--bg-1);
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border);
+}
 
 /* Submit button */
 .btn-predict {
   grid-column: 1 / -1;
-  height: 38px;
+  height: 36px;
   margin-top: 4px;
   border: none;
   border-radius: var(--radius-sm);
@@ -273,28 +381,21 @@ select.form-control {
   font-family: var(--font);
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: .3px;
   cursor: pointer;
   transition: var(--transition);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  position: relative;
-  overflow: hidden;
+  gap: 6px;
   flex-shrink: 0;
 }
 .btn-predict:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: var(--shadow-glow);
 }
-.btn-predict:active:not(:disabled) { transform: translateY(0); }
-.btn-predict:disabled {
-  opacity: .6;
-  cursor: not-allowed;
-}
+.btn-predict:disabled { opacity: .6; cursor: not-allowed; }
 .btn-predict .spinner {
-  width: 16px; height: 16px;
+  width: 14px; height: 14px;
   border: 2px solid rgba(255,255,255,.3);
   border-top-color: #fff;
   border-radius: 50%;
@@ -306,33 +407,44 @@ select.form-control {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ================================================================
-   RESULT PANEL
+   RESULT PANEL & SKELETON
    ================================================================ */
-.result-panel {
-  display: flex;
-  flex-direction: column;
-}
+.result-panel { display: flex; flex-direction: column; }
 .result-placeholder {
   text-align: center;
-  padding: 40px 16px;
+  padding: 30px 16px;
   color: var(--text-3);
   margin: auto 0;
 }
 .result-placeholder .placeholder-icon {
-  font-size: 36px;
-  margin-bottom: 10px;
+  font-size: 32px;
+  margin-bottom: 8px;
   opacity: .5;
 }
-.result-placeholder p { font-size: 13px; line-height: 1.4; }
+.result-placeholder p { font-size: 12px; line-height: 1.4; }
+
+/* Skeleton shimmer */
+.skeleton-container { display: none; flex-direction: column; gap: 10px; padding: 10px 0; }
+.skeleton-container.active { display: flex; }
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-2) 25%, var(--bg-3) 50%, var(--bg-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.skeleton-circle { width: 90px; height: 90px; border-radius: 50%; margin: 0 auto; }
+.skeleton-bar { height: 32px; width: 100%; }
+.skeleton-line { height: 14px; width: 85%; }
 
 /* Gauge */
 .gauge-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
-.gauge-svg { width: 170px; height: 95px; }
+.gauge-svg { width: 160px; height: 90px; }
 .gauge-track { fill: none; stroke: var(--gauge-track); stroke-width: 12; stroke-linecap: round; }
 .gauge-fill {
   fill: none;
@@ -342,12 +454,12 @@ select.form-control {
 }
 .gauge-score {
   font-family: var(--mono);
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 800;
   fill: var(--text-0);
 }
 .gauge-label {
-  font-size: 10px;
+  font-size: 9px;
   fill: var(--text-2);
   text-transform: uppercase;
   letter-spacing: .8px;
@@ -357,14 +469,14 @@ select.form-control {
 .risk-badge {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 4px 14px;
+  gap: 4px;
+  padding: 3px 12px;
   border-radius: var(--radius-full);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: .5px;
   text-transform: uppercase;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 .risk-badge.low { background: var(--risk-low-bg); color: var(--risk-low); }
 .risk-badge.medium { background: var(--risk-med-bg); color: var(--risk-med); }
@@ -374,72 +486,115 @@ select.form-control {
 .action-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
+  gap: 8px;
+  padding: 8px 12px;
   border-radius: var(--radius-md);
-  margin: 10px 0;
-  font-size: 13px;
+  margin: 6px 0;
+  font-size: 12px;
   font-weight: 600;
   flex-shrink: 0;
 }
 .action-bar.dispatch { background: var(--risk-low-bg); color: var(--risk-low); }
 .action-bar.call { background: var(--risk-high-bg); color: var(--risk-high); }
-.action-bar .action-icon { font-size: 18px; }
+.action-bar .action-icon { font-size: 16px; }
 
 /* Reasons list */
-.reasons-section { margin-top: 8px; }
+.reasons-section { margin-top: 6px; }
 .reasons-title {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--text-2);
   text-transform: uppercase;
   letter-spacing: .4px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 .reason-item {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  padding: 6px 0;
+  gap: 6px;
+  padding: 4px 0;
   border-bottom: 1px solid var(--border);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-1);
   line-height: 1.35;
 }
 .reason-item:last-child { border-bottom: none; }
 .reason-num {
   flex-shrink: 0;
-  width: 18px; height: 18px;
+  width: 16px; height: 16px;
   border-radius: 50%;
   background: var(--accent-bg);
   color: var(--accent);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
   display: flex; align-items: center; justify-content: center;
 }
 
 /* Warnings */
-.warnings-section { margin-top: 8px; }
+.warnings-section { margin-top: 6px; }
 .warning-item {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
+  gap: 5px;
+  padding: 4px 8px;
   border-radius: var(--radius-sm);
   background: var(--risk-med-bg);
   color: var(--risk-med);
-  font-size: 11px;
-  margin-bottom: 4px;
+  font-size: 10px;
+  margin-bottom: 3px;
 }
+
+/* Recent Checks */
+.recent-section {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.recent-list { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+.recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: var(--bg-2);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.recent-item:hover { background: var(--surface-hover); }
+.recent-sku { font-weight: 600; color: var(--text-0); }
+.recent-score { font-family: var(--mono); font-weight: 700; }
+.recent-score.low { color: var(--risk-low); }
+.recent-score.medium { color: var(--risk-med); }
+.recent-score.high { color: var(--risk-high); }
+
+/* Copy raw button */
+.copy-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-2);
+  padding: 2px 6px;
+  font-size: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.copy-btn:hover { background: var(--surface-hover); color: var(--accent); }
 
 /* Error banner */
 .error-banner {
-  padding: 12px 14px;
+  padding: 8px 12px;
   border-radius: var(--radius-md);
   background: var(--risk-high-bg);
   color: var(--risk-high);
-  font-size: 12px;
+  font-size: 11px;
   display: none;
+  margin-top: 8px;
 }
 .error-banner.visible { display: block; }
 
@@ -447,16 +602,24 @@ select.form-control {
 .app-footer {
   flex-shrink: 0;
   text-align: center;
-  padding: 6px 16px;
-  font-size: 11px;
+  padding: 4px 16px;
+  font-size: 10px;
   color: var(--text-3);
   border-top: 1px solid var(--border);
   background: var(--bg-0);
 }
 
-/* ================================================================
-   RESPONSIVE / FALLBACK FOR SMALL SCREENS
-   ================================================================ */
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Small screens fallback */
 @media (max-width: 960px) {
   body, .app-wrapper { height: auto; overflow: auto; }
   .app-main { grid-template-columns: 1fr; overflow: visible; height: auto; }
@@ -470,18 +633,6 @@ select.form-control {
   body, .app-wrapper { height: auto; overflow: auto; }
   .app-main { overflow: visible; height: auto; }
 }
-@media (max-width: 480px) {
-  .form-grid { grid-template-columns: 1fr; }
-  .form-group.col-span-2 { grid-column: span 1; }
-  .card { padding: 14px 12px; }
-}
-
-/* --- Animations --- */
-@keyframes fadeInUp {
-  from { opacity:0; transform: translateY(10px); }
-  to { opacity:1; transform: translateY(0); }
-}
-.result-appear { animation: fadeInUp .3s ease-out; }
 </style>
 </head>
 <body>
@@ -510,17 +661,30 @@ select.form-control {
 
     <!-- LEFT: Form Card -->
     <div class="card">
-      <div class="card-title"><span class="icon">📋</span> Score an Order</div>
+      <div class="card-header">
+        <div class="card-title"><span class="icon">📋</span> Score an Order</div>
+      </div>
+
+      <!-- Presets -->
+      <div class="presets-bar">
+        <span class="preset-label">Presets:</span>
+        <button type="button" class="preset-btn" id="presetLow">⚡ Low Risk (Air Fryer)</button>
+        <button type="button" class="preset-btn" id="presetHigh">⚠️ High Risk (Vacuum COD)</button>
+        <button type="button" class="preset-btn" id="presetWalkin">🚶 Walk-in (000000)</button>
+      </div>
+
       <form id="predictForm" class="form-grid" autocomplete="off">
 
         <div class="form-group col-span-2">
           <label class="form-label" for="sku">Product SKU</label>
           <select class="form-control" id="sku" name="sku" required></select>
+          <span class="field-error-msg" id="err_sku"></span>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="state">State</label>
           <select class="form-control" id="state" name="state" required></select>
+          <span class="field-error-msg" id="err_state"></span>
         </div>
 
         <div class="form-group">
@@ -531,6 +695,7 @@ select.form-control {
             <option value="cod">Cash on Delivery</option>
             <option value="emi">EMI</option>
           </select>
+          <span class="field-error-msg" id="err_payment_mode"></span>
         </div>
 
         <div class="form-group">
@@ -540,63 +705,91 @@ select.form-control {
             <option value="app">App</option>
             <option value="marketplace">Marketplace</option>
           </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="order_value_inr">Order Value (₹)</label>
-          <input class="form-control" type="number" id="order_value_inr" name="order_value_inr" placeholder="Auto" min="0" step="1">
+          <span class="field-error-msg" id="err_sales_channel"></span>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="discount_pct">Discount %</label>
           <input class="form-control" type="number" id="discount_pct" name="discount_pct" value="0" min="0" max="100" step="1">
+          <span class="field-error-msg" id="err_discount_pct"></span>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="qty">Quantity</label>
           <input class="form-control" type="number" id="qty" name="qty" value="1" min="1" max="50">
+          <span class="field-error-msg" id="err_qty"></span>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="promised_delivery_days">Delivery Days</label>
           <input class="form-control" type="number" id="promised_delivery_days" name="promised_delivery_days" value="3" min="1" max="30">
+          <span class="field-error-msg" id="err_promised_delivery_days"></span>
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="delivery_pincode">Pincode</label>
-          <input class="form-control" type="text" id="delivery_pincode" name="delivery_pincode" value="411001" maxlength="6" pattern="[0-9]{6}">
+          <label class="form-label" for="delivery_pincode">Pincode (6 digits)</label>
+          <input class="form-control" type="text" id="delivery_pincode" name="delivery_pincode" value="411001" maxlength="6">
+          <span class="field-error-msg" id="err_delivery_pincode"></span>
         </div>
 
+        <!-- Segmented Control for Shield -->
         <div class="form-group">
-          <label class="form-label" for="shield_member">Shield</label>
-          <select class="form-control" id="shield_member" name="shield_member">
-            <option value="N">No</option>
-            <option value="Y">Yes</option>
-          </select>
+          <label class="form-label">Shield Member</label>
+          <div class="segmented-control" id="segShield" role="radiogroup" aria-label="Shield Member">
+            <button type="button" class="seg-btn active" data-val="N">No</button>
+            <button type="button" class="seg-btn" data-val="Y">Yes</button>
+            <input type="hidden" name="shield_member" id="shield_member" value="N">
+          </div>
+          <span class="field-error-msg" id="err_shield_member"></span>
         </div>
 
+        <!-- Segmented Control for Gift -->
         <div class="form-group">
-          <label class="form-label" for="is_gift">Gift Order</label>
-          <select class="form-control" id="is_gift" name="is_gift">
-            <option value="N">No</option>
-            <option value="Y">Yes</option>
-          </select>
+          <label class="form-label">Gift Order</label>
+          <div class="segmented-control" id="segGift" role="radiogroup" aria-label="Gift Order">
+            <button type="button" class="seg-btn active" data-val="N">No</button>
+            <button type="button" class="seg-btn" data-val="Y">Yes</button>
+            <input type="hidden" name="is_gift" id="is_gift" value="N">
+          </div>
+          <span class="field-error-msg" id="err_is_gift"></span>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="customer_prior_orders">Prior Orders</label>
           <input class="form-control" type="number" id="customer_prior_orders" name="customer_prior_orders" value="0" min="0">
+          <span class="field-error-msg" id="err_customer_prior_orders"></span>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="customer_prior_returns">Prior Returns</label>
           <input class="form-control" type="number" id="customer_prior_returns" name="customer_prior_returns" value="0" min="0">
+          <span class="field-error-msg" id="err_customer_prior_returns"></span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group col-span-2">
           <label class="form-label" for="delivery_note">Delivery Note</label>
-          <input class="form-control" type="text" id="delivery_note" name="delivery_note" placeholder="Optional note">
+          <input class="form-control" type="text" id="delivery_note" name="delivery_note" placeholder="Optional delivery instructions">
+          <span class="field-error-msg" id="err_delivery_note"></span>
         </div>
+
+        <!-- Advanced Disclosure -->
+        <details class="advanced-disclosure" id="advancedDetails">
+          <summary>⚙️ Advanced Fields (Order ID, Timestamp, Value Override)</summary>
+          <div class="advanced-grid">
+            <div class="form-group">
+              <label class="form-label" for="order_id">Order ID</label>
+              <input class="form-control" type="text" id="order_id" name="order_id" value="KO-ONLINE-TEST">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="order_placed_at">Order Placed At</label>
+              <input class="form-control" type="text" id="order_placed_at" name="order_placed_at" placeholder="YYYY-MM-DD HH:MM">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="order_value_inr">Order Value Override (₹)</label>
+              <input class="form-control" type="number" id="order_value_inr" name="order_value_inr" placeholder="Auto" min="0" step="1">
+            </div>
+          </div>
+        </details>
 
         <button type="submit" class="btn-predict" id="btnPredict">
           <span class="btn-text">⚡ Score This Order</span>
@@ -607,13 +800,25 @@ select.form-control {
 
     <!-- RIGHT: Result Panel -->
     <div class="card result-panel" id="resultPanel">
-      <div class="card-title"><span class="icon">📊</span> Risk Assessment</div>
+      <div class="card-header">
+        <div class="card-title"><span class="icon">📊</span> Risk Assessment</div>
+        <button type="button" class="copy-btn" id="copyRawBtn" style="display:none;" title="Copy JSON response">📋 Copy JSON</button>
+      </div>
 
       <div id="resultPlaceholder" class="result-placeholder">
         <div class="placeholder-icon">🎯</div>
-        <p>Fill in the order details and click<br><strong>Score This Order</strong> to see the prediction.</p>
+        <p>Fill in the order details or click a preset<br>to see real-time return risk prediction.</p>
       </div>
 
+      <!-- Skeleton Shimmer -->
+      <div id="skeletonContainer" class="skeleton-container">
+        <div class="skeleton skeleton-circle"></div>
+        <div class="skeleton skeleton-bar"></div>
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line" style="width:70%;"></div>
+      </div>
+
+      <!-- Result Content -->
       <div id="resultContent" style="display:none;">
         <!-- Gauge -->
         <div class="gauge-container">
@@ -629,7 +834,7 @@ select.form-control {
 
         <!-- Action -->
         <div id="actionBar" class="action-bar dispatch">
-          <span class="action-icon">✅</span>
+          <span class="action-icon" id="actionIcon">✅</span>
           <span id="actionText">Proceed to Dispatch Immediately</span>
         </div>
 
@@ -643,13 +848,20 @@ select.form-control {
         <div id="warningsSection" class="warnings-section" style="display:none;"></div>
 
         <!-- Meta -->
-        <div style="margin-top:8px; font-size:10px; color:var(--text-3);">
-          Model <span id="metaVersion" style="font-family:var(--mono);">—</span> ·
-          Threshold <span id="metaThreshold" style="font-family:var(--mono);">—</span>
+        <div style="margin-top:6px; font-size:10px; color:var(--text-3); display:flex; justify-content:space-between;">
+          <span>Model: <span id="metaVersion" style="font-family:var(--mono);">—</span></span>
+          <span>Threshold: <span id="metaThreshold" style="font-family:var(--mono);">—</span></span>
         </div>
       </div>
 
       <div id="errorBanner" class="error-banner"></div>
+
+      <!-- Recent Checks (Last 5) -->
+      <div id="recentSection" class="recent-section" style="display:none;">
+        <div class="reasons-title">Recent Checks (Last 5)</div>
+        <div id="recentList" class="recent-list"></div>
+      </div>
+
     </div>
   </main>
 
@@ -662,55 +874,92 @@ select.form-control {
 
 <script>
 /* ================================================================
-   APPLICATION LOGIC — vanilla JS, no dependencies
+   APPLICATION LOGIC — vanilla JS, strictly in-memory state
    ================================================================ */
 (function() {
   'use strict';
 
-  // --- DOM refs ---
+  // --- In-Memory State (No localStorage) ---
+  let memoryTheme = 'dark';
+  const recentChecks = [];
+  let lastPredictionData = null;
+
+  // --- DOM Elements ---
   const form = document.getElementById('predictForm');
   const btn = document.getElementById('btnPredict');
   const resultPlaceholder = document.getElementById('resultPlaceholder');
+  const skeletonContainer = document.getElementById('skeletonContainer');
   const resultContent = document.getElementById('resultContent');
   const errorBanner = document.getElementById('errorBanner');
   const statusBadge = document.getElementById('statusBadge');
   const themeToggle = document.getElementById('themeToggle');
+  const copyRawBtn = document.getElementById('copyRawBtn');
 
   const gaugeFill = document.getElementById('gaugeFill');
   const gaugeScore = document.getElementById('gaugeScore');
   const riskBadge = document.getElementById('riskBadge');
   const actionBar = document.getElementById('actionBar');
+  const actionIcon = document.getElementById('actionIcon');
   const actionText = document.getElementById('actionText');
   const reasonsList = document.getElementById('reasonsList');
   const warningsSection = document.getElementById('warningsSection');
   const metaVersion = document.getElementById('metaVersion');
   const metaThreshold = document.getElementById('metaThreshold');
+  const recentSection = document.getElementById('recentSection');
+  const recentList = document.getElementById('recentList');
 
-  const GAUGE_ARC = 251.33; // arc length of the semicircle path
+  const GAUGE_ARC = 251.33;
 
-  // Risk colors for gauge
   const RISK_COLORS = {
     low:    { stroke: 'var(--risk-low)',  class: 'low' },
     medium: { stroke: 'var(--risk-med)',  class: 'medium' },
     high:   { stroke: 'var(--risk-high)', class: 'high' },
   };
 
-  // --- Theme ---
-  function getPreferredTheme() {
-    const stored = localStorage.getItem('kestrel-theme');
-    if (stored) return stored;
-    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-  }
+  // --- In-Memory Theme Toggle ---
   function applyTheme(theme) {
+    memoryTheme = theme;
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('kestrel-theme', theme);
     themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
   }
-  applyTheme(getPreferredTheme());
+  applyTheme('dark');
   themeToggle.addEventListener('click', function() {
-    const current = document.documentElement.getAttribute('data-theme');
-    applyTheme(current === 'dark' ? 'light' : 'dark');
+    applyTheme(memoryTheme === 'dark' ? 'light' : 'dark');
   });
+
+  // --- Segmented Controls ---
+  function initSegmented(segId, inputId) {
+    const container = document.getElementById(segId);
+    const hiddenInput = document.getElementById(inputId);
+    if (!container || !hiddenInput) return;
+
+    const btns = container.querySelectorAll('.seg-btn');
+    btns.forEach(function(b) {
+      b.addEventListener('click', function() {
+        btns.forEach(function(x) { x.classList.remove('active'); });
+        b.classList.add('active');
+        hiddenInput.value = b.getAttribute('data-val');
+        clearFieldError(inputId);
+      });
+    });
+  }
+  initSegmented('segShield', 'shield_member');
+  initSegmented('segGift', 'is_gift');
+
+  function setSegmentedVal(segId, inputId, val) {
+    const container = document.getElementById(segId);
+    const hiddenInput = document.getElementById(inputId);
+    if (!container || !hiddenInput) return;
+    hiddenInput.value = val;
+    const btns = container.querySelectorAll('.seg-btn');
+    btns.forEach(function(b) {
+      if (b.getAttribute('data-val') === val) {
+        b.classList.add('active');
+      } else {
+        b.classList.remove('active');
+      }
+    });
+  }
 
   // --- Load catalog & health ---
   async function init() {
@@ -727,15 +976,19 @@ select.form-control {
         const health = await healthResp.json();
         if (health.model_loaded) {
           statusBadge.className = 'status-badge online';
-          statusBadge.innerHTML = '<span class="status-dot"></span> Online';
+          statusBadge.textContent = '';
+          const dot = document.createElement('span');
+          dot.className = 'status-dot';
+          statusBadge.appendChild(dot);
+          statusBadge.appendChild(document.createTextNode(' Online'));
         } else {
           statusBadge.className = 'status-badge offline';
-          statusBadge.innerHTML = '<span class="status-dot"></span> No Model';
+          statusBadge.textContent = 'No Model';
         }
       }
     } catch (e) {
       statusBadge.className = 'status-badge offline';
-      statusBadge.innerHTML = '<span class="status-dot"></span> Offline';
+      statusBadge.textContent = 'Offline';
     }
   }
 
@@ -743,7 +996,6 @@ select.form-control {
     const skuSelect = document.getElementById('sku');
     const stateSelect = document.getElementById('state');
 
-    // SKU dropdown grouped by family
     skuSelect.innerHTML = '';
     const families = {};
     (catalog.products || []).forEach(function(p) {
@@ -756,13 +1008,12 @@ select.form-control {
       families[fam].forEach(function(p) {
         const opt = document.createElement('option');
         opt.value = p.sku;
-        opt.textContent = p.sku + '  ·  ₹' + p.list_price_inr.toLocaleString('en-IN');
+        opt.textContent = p.sku + '  ·  ₹' + Number(p.list_price_inr).toLocaleString('en-IN');
         optgroup.appendChild(opt);
       });
       skuSelect.appendChild(optgroup);
     });
 
-    // State dropdown
     stateSelect.innerHTML = '';
     (catalog.states || []).sort().forEach(function(s) {
       const opt = document.createElement('option');
@@ -773,15 +1024,182 @@ select.form-control {
     });
   }
 
-  // --- Predict ---
+  // --- Preset Handlers ---
+  document.getElementById('presetLow').addEventListener('click', function() {
+    loadPreset({
+      sku: 'KH-AF-01',
+      state: 'MH',
+      payment_mode: 'prepaid_upi',
+      sales_channel: 'web',
+      discount_pct: 0,
+      qty: 1,
+      promised_delivery_days: 2,
+      delivery_pincode: '411001',
+      shield_member: 'N',
+      is_gift: 'N',
+      customer_prior_orders: 5,
+      customer_prior_returns: 0,
+      delivery_note: 'Standard delivery',
+    });
+  });
+
+  document.getElementById('presetHigh').addEventListener('click', function() {
+    loadPreset({
+      sku: 'KH-RV-01',
+      state: 'MH',
+      payment_mode: 'cod',
+      sales_channel: 'marketplace',
+      discount_pct: 30,
+      qty: 2,
+      promised_delivery_days: 7,
+      delivery_pincode: '411001',
+      shield_member: 'Y',
+      is_gift: 'N',
+      customer_prior_orders: 3,
+      customer_prior_returns: 2,
+      delivery_note: 'Call before delivery',
+    });
+  });
+
+  document.getElementById('presetWalkin').addEventListener('click', function() {
+    loadPreset({
+      sku: 'KH-CF-01',
+      state: 'MH',
+      payment_mode: 'cod',
+      sales_channel: 'web',
+      discount_pct: 0,
+      qty: 1,
+      promised_delivery_days: 3,
+      delivery_pincode: '000000',
+      shield_member: 'N',
+      is_gift: 'N',
+      customer_prior_orders: 0,
+      customer_prior_returns: 0,
+      delivery_note: 'Walk-in unverified address',
+    });
+  });
+
+  function loadPreset(p) {
+    clearAllFieldErrors();
+    if (p.sku && form.sku) form.sku.value = p.sku;
+    if (p.state && form.state) form.state.value = p.state;
+    if (p.payment_mode && form.payment_mode) form.payment_mode.value = p.payment_mode;
+    if (p.sales_channel && form.sales_channel) form.sales_channel.value = p.sales_channel;
+    if (form.discount_pct) form.discount_pct.value = p.discount_pct;
+    if (form.qty) form.qty.value = p.qty;
+    if (form.promised_delivery_days) form.promised_delivery_days.value = p.promised_delivery_days;
+    if (form.delivery_pincode) form.delivery_pincode.value = p.delivery_pincode;
+    if (form.customer_prior_orders) form.customer_prior_orders.value = p.customer_prior_orders;
+    if (form.customer_prior_returns) form.customer_prior_returns.value = p.customer_prior_returns;
+    if (form.delivery_note) form.delivery_note.value = p.delivery_note || '';
+    setSegmentedVal('segShield', 'shield_member', p.shield_member || 'N');
+    setSegmentedVal('segGift', 'is_gift', p.is_gift || 'N');
+  }
+
+  // --- Error Handling & ARIA ---
+  function clearAllFieldErrors() {
+    const errorMsgs = form.querySelectorAll('.field-error-msg');
+    errorMsgs.forEach(function(el) {
+      el.textContent = '';
+      el.classList.remove('visible');
+    });
+    const inputs = form.querySelectorAll('.form-control');
+    inputs.forEach(function(inp) {
+      inp.removeAttribute('aria-invalid');
+      inp.classList.remove('input-error');
+    });
+  }
+
+  function clearFieldError(fieldId) {
+    const errSpan = document.getElementById('err_' + fieldId);
+    if (errSpan) {
+      errSpan.textContent = '';
+      errSpan.classList.remove('visible');
+    }
+    const inp = document.getElementById(fieldId);
+    if (inp) {
+      inp.removeAttribute('aria-invalid');
+      inp.classList.remove('input-error');
+    }
+  }
+
+  form.querySelectorAll('.form-control').forEach(function(inp) {
+    inp.addEventListener('input', function() { clearFieldError(inp.id); });
+    inp.addEventListener('change', function() { clearFieldError(inp.id); });
+  });
+
+  function apply422Errors(errors) {
+    (errors || []).forEach(function(errStr) {
+      // e.g. "body -> delivery_pincode: Invalid delivery pincode..."
+      const parts = errStr.split(':');
+      const locPart = parts[0] || '';
+      const msg = parts.slice(1).join(':').trim() || errStr;
+
+      let fieldId = '';
+      if (locPart.includes('delivery_pincode')) fieldId = 'delivery_pincode';
+      else if (locPart.includes('sku')) fieldId = 'sku';
+      else if (locPart.includes('payment_mode')) fieldId = 'payment_mode';
+      else if (locPart.includes('sales_channel')) fieldId = 'sales_channel';
+      else if (locPart.includes('discount_pct')) fieldId = 'discount_pct';
+      else if (locPart.includes('qty')) fieldId = 'qty';
+      else if (locPart.includes('promised_delivery_days')) fieldId = 'promised_delivery_days';
+      else if (locPart.includes('shield_member')) fieldId = 'shield_member';
+      else if (locPart.includes('is_gift')) fieldId = 'is_gift';
+      else if (locPart.includes('state')) fieldId = 'state';
+
+      if (fieldId) {
+        const inp = document.getElementById(fieldId);
+        if (inp) {
+          inp.setAttribute('aria-invalid', 'true');
+          inp.classList.add('input-error');
+        }
+        const errSpan = document.getElementById('err_' + fieldId);
+        if (errSpan) {
+          errSpan.textContent = msg;
+          errSpan.classList.add('visible');
+        }
+      }
+    });
+  }
+
+  // --- Copy JSON Raw ---
+  copyRawBtn.addEventListener('click', function() {
+    if (!lastPredictionData) return;
+    const jsonText = JSON.stringify(lastPredictionData, null, 2);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(jsonText).then(onCopied);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = jsonText;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      onCopied();
+    }
+  });
+
+  function onCopied() {
+    const orig = copyRawBtn.textContent;
+    copyRawBtn.textContent = '✓ Copied!';
+    setTimeout(function() { copyRawBtn.textContent = orig; }, 1500);
+  }
+
+  // --- Predict Submit ---
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
+    clearAllFieldErrors();
     btn.classList.add('loading');
     btn.disabled = true;
     errorBanner.classList.remove('visible');
     errorBanner.textContent = '';
 
+    resultPlaceholder.style.display = 'none';
+    resultContent.style.display = 'none';
+    skeletonContainer.classList.add('active');
+
     const payload = {
+      order_id: form.order_id ? form.order_id.value : 'KO-ONLINE-TEST',
       sku: form.sku.value,
       state: form.state.value,
       payment_mode: form.payment_mode.value,
@@ -797,6 +1215,9 @@ select.form-control {
       delivery_note: form.delivery_note.value || '',
     };
 
+    if (form.order_placed_at && form.order_placed_at.value) {
+      payload.order_placed_at = form.order_placed_at.value;
+    }
     const ov = parseFloat(form.order_value_inr.value);
     if (ov > 0) payload.order_value_inr = ov;
 
@@ -807,17 +1228,24 @@ select.form-control {
         body: JSON.stringify(payload),
       });
 
+      const data = await resp.json();
+
       if (!resp.ok) {
-        const errData = await resp.json().catch(function() { return {}; });
-        const msg = errData.detail || errData.message || ('HTTP ' + resp.status);
+        if (resp.status === 422 && data.errors) {
+          apply422Errors(data.errors);
+        }
+        const msg = data.detail || data.message || ('HTTP ' + resp.status);
         throw new Error(msg);
       }
 
-      const data = await resp.json();
+      lastPredictionData = data;
+      addRecentCheck(payload, data);
       showResult(data);
     } catch (err) {
+      skeletonContainer.classList.remove('active');
       resultPlaceholder.style.display = 'none';
       resultContent.style.display = 'none';
+      copyRawBtn.style.display = 'none';
       errorBanner.textContent = '⚠ ' + err.message;
       errorBanner.classList.add('visible');
     } finally {
@@ -827,11 +1255,10 @@ select.form-control {
   });
 
   function showResult(data) {
+    skeletonContainer.classList.remove('active');
     resultPlaceholder.style.display = 'none';
     resultContent.style.display = 'block';
-    resultContent.classList.remove('result-appear');
-    void resultContent.offsetWidth; // reflow
-    resultContent.classList.add('result-appear');
+    copyRawBtn.style.display = 'inline-flex';
 
     // Gauge
     const score = data.score;
@@ -848,28 +1275,42 @@ select.form-control {
     // Action
     if (data.recommended_action === 'confirm_call') {
       actionBar.className = 'action-bar call';
-      actionBar.querySelector('.action-icon').textContent = '📞';
+      actionIcon.textContent = '📞';
     } else {
       actionBar.className = 'action-bar dispatch';
-      actionBar.querySelector('.action-icon').textContent = '✅';
+      actionIcon.textContent = '✅';
     }
     actionText.textContent = data.action_label;
 
-    // Reasons
+    // Reasons (textContent only)
     reasonsList.innerHTML = '';
     (data.top_3_reasons || []).forEach(function(reason, i) {
-      var item = document.createElement('div');
+      const item = document.createElement('div');
       item.className = 'reason-item';
-      item.innerHTML = '<span class="reason-num">' + (i+1) + '</span><span>' + escapeHtml(reason) + '</span>';
+
+      const num = document.createElement('span');
+      num.className = 'reason-num';
+      num.textContent = String(i + 1);
+
+      const txt = document.createElement('span');
+      txt.textContent = reason;
+
+      item.appendChild(num);
+      item.appendChild(txt);
       reasonsList.appendChild(item);
     });
 
-    // Warnings
+    // Warnings (textContent only)
     if (data.warnings && data.warnings.length > 0) {
       warningsSection.style.display = 'block';
-      warningsSection.innerHTML = '<div class="reasons-title">⚠ Warnings</div>';
+      warningsSection.innerHTML = '';
+      const title = document.createElement('div');
+      title.className = 'reasons-title';
+      title.textContent = '⚠ Operational Warnings';
+      warningsSection.appendChild(title);
+
       data.warnings.forEach(function(w) {
-        var wi = document.createElement('div');
+        const wi = document.createElement('div');
         wi.className = 'warning-item';
         wi.textContent = w;
         warningsSection.appendChild(wi);
@@ -878,18 +1319,48 @@ select.form-control {
       warningsSection.style.display = 'none';
     }
 
-    // Meta
+    // Dynamic Meta from API
     metaVersion.textContent = data.model_version;
-    metaThreshold.textContent = data.threshold_applied.toFixed(2);
+    metaThreshold.textContent = Number(data.threshold_applied).toFixed(2);
 
-    // Hide error
     errorBanner.classList.remove('visible');
   }
 
-  function escapeHtml(str) {
-    var div = document.createElement('div');
-    div.appendChild(document.createTextNode(str));
-    return div.innerHTML;
+  function addRecentCheck(payload, data) {
+    recentChecks.unshift({
+      sku: payload.sku,
+      score: data.score,
+      band: data.risk_band,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      data: data,
+    });
+    if (recentChecks.length > 5) recentChecks.pop();
+    renderRecentChecks();
+  }
+
+  function renderRecentChecks() {
+    if (recentChecks.length === 0) {
+      recentSection.style.display = 'none';
+      return;
+    }
+    recentSection.style.display = 'block';
+    recentList.innerHTML = '';
+    recentChecks.forEach(function(item) {
+      const div = document.createElement('div');
+      div.className = 'recent-item';
+
+      const left = document.createElement('div');
+      left.innerHTML = '<span class="recent-sku">' + item.sku + '</span> <span style="color:var(--text-3); font-size:9px;">' + item.time + '</span>';
+
+      const right = document.createElement('span');
+      right.className = 'recent-score ' + (item.band || 'low');
+      right.textContent = item.score.toFixed(4) + ' (' + item.band + ')';
+
+      div.appendChild(left);
+      div.appendChild(right);
+      div.addEventListener('click', function() { showResult(item.data); });
+      recentList.appendChild(div);
+    });
   }
 
   // --- Init ---

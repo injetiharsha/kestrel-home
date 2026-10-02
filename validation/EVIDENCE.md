@@ -6,7 +6,7 @@ _All metrics and figures generated deterministically from code execution (`scrip
 
 ## 1. Executive Summary & Validation Methodology
 
-We evaluated returns prediction models using **rolling-origin temporal cross-validation** (Section 9 of PLAN.md). Because return dynamics evolve over time, random K-Fold splits leak future temporal structure and overstate performance. 
+We evaluated returns prediction models using **rolling-origin temporal cross-validation**. Because return dynamics evolve over time, random K-Fold splits leak future temporal structure and overstate performance. 
 
 - **Window A (Fold 1):** Historical data up to `2025-09-30` used for feature training; `2025-10-01` to `2025-12-31` used to determine the optimal economic decision threshold (`0.34`).
 - **Windows B (Folds 2 & 3):** Evaluated strictly out-of-sample on later time periods using the locked threshold from Window A.
@@ -60,7 +60,7 @@ The threshold found in Window A transfers with remarkable stability to Windows B
 
 ## 4. Operational Economics: Call vs. Hold vs. Do Nothing
 
-Parameters from Section 6 of PLAN.md:
+Operational parameters:
 - **Monthly Order Volume:** 700 orders
 - **Return Cost ($C_R$):** Rs 1,150 all-in reverse logistics / restocking / refurbishing cost
 - **Call Cost ($C_C$):** Rs 45 per pre-dispatch confirmation call

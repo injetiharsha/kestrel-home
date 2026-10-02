@@ -259,5 +259,31 @@
     "Ceiling Fan",
     "Robot Vacuum",
     "Water Purifier"
-  ]
+  ],
+  "ranges": {
+    "discount_pct": [
+      0.0,
+      60.0
+    ],
+    "qty": [
+      1,
+      2
+    ],
+    "promised_delivery_days": [
+      1,
+      12
+    ],
+    "customer_prior_orders": [
+      0,
+      10
+    ],
+    "customer_prior_returns": [
+      0,
+      6
+    ],
+    "order_value_inr": [
+      1000.0,
+      60000.0
+    ]
+  }
 }

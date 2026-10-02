@@ -28,7 +28,7 @@ pip install -r requirements.txt
 ```
 
 ### 1.2. Run Test Suite
-Verify data blacklist rules, cleaning pipelines, and API endpoints:
+Verify data blacklist rules, cleaning pipelines, clamping sweeps, and API endpoints:
 ```bash
 python -m pytest -v
 ```
@@ -37,7 +37,7 @@ python -m pytest -v
 ```bash
 uvicorn service.app:app --host 0.0.0.0 --port 8000
 ```
-Open your browser at **`http://localhost:8000`** to access the interactive web screening dashboard.
+Open your browser at **`http://localhost:8000`** to access the interactive single-page web screening dashboard.
 
 ---
 
@@ -87,51 +87,53 @@ Scores pre-dispatch return risk for a single order.
 ### `GET /health`
 Returns health status, loaded model version, and catalog dimensions.
 
+### `GET /catalog`
+Returns product catalog, valid states, categories, and training clamping ranges.
+
 ---
 
 ## 3. Project Structure
 
 ```
-├── data/                  # Raw dataset files (gitignored in production)
 ├── memo/
 │   └── memo.md            # One-page executive memo to Ritu (Head of Ops)
 ├── notes/
+│   ├── LOG.md             # Execution and decision log
 │   ├── cost.md            # Rs 0 prediction cost arithmetic
-│   ├── data_audit.md      # P1 audit findings & data verification
 │   ├── decisions.md       # Strategic pushbacks and decision rationale
 │   ├── discarded.md       # Discarded models and approaches
 │   ├── expected_score.md  # Expected ROC-AUC lock-in before final fit
 │   ├── extras.md          # Unasked value (security, offline UI, explainability)
 │   ├── handoff.md         # 3 Monday handoff priorities
 │   ├── known_issues.md    # Audit anomalies and bug fixes
-│   ├── tradeoffs.md       # Deliberate engineering trade-offs
-│   ├── video_script.md    # 3-minute screen recording script
-│   └── STATUS.md          # Phase progress tracker
+│   └── tradeoffs.md       # Deliberate engineering trade-offs
 ├── outputs/
 │   ├── economics.json     # Full JSON metrics, ablations, sensitivities
 │   ├── model_lr.joblib    # Trained production Logistic Regression pipeline
 │   └── predictions.csv    # Final test set predictions (2,096 rows)
-├── prompts/               # Verbatim prompt history (01 to 08)
 ├── scripts/
 │   ├── audit.py           # Data audit runner
+│   ├── build_catalog.py   # Product catalog and ranges builder
 │   ├── log.py             # CLI logging tool for notes/LOG.md
 │   ├── predict.py         # Test inference runner
 │   └── train.py           # End-to-end training & cross-validation runner
 ├── service/
-│   ├── app.py             # FastAPI backend
+│   ├── app.py             # FastAPI backend with input clamping & 422 handlers
+│   ├── catalog.json       # Product catalog, states, and clamping ranges
 │   ├── reasons.py         # Model-agnostic perturbation explainability
-│   └── static/index.html  # Zero-CDN vanilla HTML/CSS/JS frontend
+│   └── static/index.html  # Zero-CDN single-page vanilla HTML/CSS/JS frontend
 ├── src/
 │   ├── cleaning.py        # Deduplication, Oct-fix, address standardization
 │   ├── evaluation.py      # Rolling time folds, metrics, rupee economics
 │   ├── features.py        # Feature matrix builder (strict blacklist)
 │   └── models.py          # Scikit-learn model pipelines
 ├── tests/
-│   ├── test_blacklist.py  # 18 blacklist & leakage prevention tests
-│   └── test_service.py    # 6 API and explainability tests
+│   ├── test_blacklist.py  # 18 blacklist & leakage prevention tests (clean-machine skip)
+│   └── test_service.py    # 12 API, clamping sweep, and explainability tests
 ├── requirements.txt       # Pinned dependencies
-├── SUBMISSION.md          # Complete engagement submission form
-└── PLAN.md                # Single source of truth plan & change log
+├── submission-form.md     # Complete engagement submission form
+└── validation/
+    └── EVIDENCE.md        # Deterministic validation evidence report
 ```
 
 ---

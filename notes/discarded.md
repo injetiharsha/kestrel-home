@@ -4,15 +4,15 @@ This document catalogs approaches, features, and model concepts that were explor
 
 ---
 
-### 1. Complex Tree Classifiers (HistGradientBoosting / XGBoost)
-* **What was tried:** Tuned `HistGradientBoostingClassifier` across max depth, min samples leaf, and learning rates.
-* **Why discarded:** In temporal backtests on Fold 3, HistGBT achieved AUC 0.7546 and PR-AUC 0.3633, lagging behind regularized Logistic Regression (AUC 0.7728, PR-AUC 0.3949). The tree model overfit to high-cardinality noise in the 10.5k dataset.
+### 1. Tree Classifiers (HistGradientBoosting)
+* **What was tried:** Evaluated `HistGradientBoostingClassifier` pipeline against Logistic Regression in `src/models.py`.
+* **Why discarded:** In temporal backtests on Fold 3, HistGBT achieved AUC 0.7546 and PR-AUC 0.3633, lagging behind regularized Logistic Regression (AUC 0.7728, PR-AUC 0.3949). The tree model showed signs of overfitting to categorical noise on the 10.5k dataset.
 
 ---
 
-### 2. Random K-Fold Cross-Validation Splitting
-* **What was tried:** Tested standard 5-fold stratified random splitting on `train.csv`.
-* **Why discarded:** Produced unrealistically high AUC scores (0.83+), masking severe temporal leakage of customer repeat behavior across time. Replaced with rolling-origin time-based folds strictly ordered by `order_placed_at`.
+### 2. Random K-Fold Splitting
+* **What was tried:** Considered standard random K-fold cross-validation.
+* **Why discarded:** Violates chronological causality in time-series order data. Replaced with rolling-origin time-based folds strictly ordered by `order_placed_at`.
 
 ---
 
@@ -23,8 +23,8 @@ This document catalogs approaches, features, and model concepts that were explor
 ---
 
 ### 4. Raw Free-Text Embeddings from Delivery Notes
-* **What was tried:** Considered tokenizing and embedding raw `delivery_note` text strings.
-* **Why discarded:** Discovered adversarial prompt injection strings in raw notes. Furthermore, feature ablation confirmed raw text adds negligible signal over simple structural templates (`NONE`, `Call on delivery`, `Leave with security`, `Office address`).
+* **What was tried:** Considered tokenizing and embedding raw `delivery_note` free-text strings.
+* **Why discarded:** Data audit confirmed raw text contains noise and unstructured variations that add negligible signal over normalized structural templates (`NONE`, `Call on delivery`, `Leave with security`, `Office address`).
 
 ---
 
